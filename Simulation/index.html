@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body{
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #container{
+            background-color: bisque;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+        }
+
+        .circle{
+            position: relative;
+            border: 1px solid black;
+            border-radius: 50%;
+        }
+    </style>
+
+    <div id="container">
+        <div class="circle" id="center"></div>
+        <div class="circle" id="circle1"></div>
+        <div class="circle" id="circle2"></div>
+        <div class="circle" id="circle3"></div>
+        <div class="circle" id="circle4"></div>
+        <div class="circle" id="circle5"></div>
+        <div class="circle" id="circle6"></div>
+    </div>
+
+    <script>
+        const relativeSize = 0.2;
+        const container = document.getElementById("container");
+        const center = document.getElementById("center");
+
+        const circles = [];
+        for(let i=1; i<=6; i++){
+            circles.push(document.getElementById("circle" + i));
+        }
+
+        //Resize circles 
+        center.style.width = (container.offsetWidth * relativeSize) + "px";
+        center.style.height = (container.offsetHeight * relativeSize) + "px";
+        for(let i=0; i<6; i++){
+            circles[i].style.width = (container.offsetWidth * relativeSize) + "px";
+            circles[i].style.height = (container.offsetHeight * relativeSize) + "px";
+        }
+
+        center.style.left = (container.offsetWidth/2 - center.offsetWidth/2) + "px";
+        center.style.top = (container.offsetHeight/2 - center.offsetHeight/2) + "px";
+
+        let containerPadding = container.offsetWidth*0.05;
+
+        for(let i=0; i<6; i++){
+            circles[i].style.left = (container.offsetWidth/2 + Math.cos(Math.PI*2/6*i)*(container.offsetWidth/2 - circles[i].offsetWidth/2 - containerPadding)) - circles[i].offsetHeight/2 + "px";
+            circles[i].style.top = (container.offsetHeight/2 - Math.sin(Math.PI*2/6*i)*(container.offsetHeight/2 - circles[i].offsetWidth/2 - containerPadding) - circles[i].offsetHeight/2 - center.offsetHeight*(i+1)) + "px";
+
+            console.log("Circle " + i + ": ");
+
+            console.log("x: " + (container.offsetWidth/2 + Math.cos(Math.PI*2/6*i)*container.offsetWidth/2 /*- circles[i].offsetWidth/2*/));
+            console.log("y: " + (container.offsetWidth/2 - Math.sin(Math.PI*2/6*i)*container.offsetWidth/2 /*- circles[i].offsetWidth/2*/));
+        }
+        
+    </script>
+</body>
+</html>
