@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Ouchterlony</title>
 </head>
 <body>
     <style>
@@ -14,35 +14,95 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: sans-serif;
         }
 
-        #container{
+        #plate{
+            position: relative;
             background-color: bisque;
             width: 600px;
             height: 600px;
             border-radius: 50%;
         }
 
+        .container{
+            position:relative;
+            width: 0px;
+            height: 0px;
+        }
+
         .circle{
             position: relative;
+            background-color: white;
+            opacity: 50%;
             border: 1px solid black;
             border-radius: 50%;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .menu{
+            position: relative;
+            width: 140px;
+            background-color: white;
+            cursor: pointer;
+            left: 80px;
+            top: 50px;
+            font-weight: bold;
+        }
+
+        .menu > div{
+            border: 1px solid black;
+            padding-left: 10px;
+        }
+
+        .menu > div:hover{
+            background-color: lightgray;
+        }
+
+        .circleText{
+            position: relative;
+            font-size: 20px;
+            font-weight: bold;
         }
     </style>
 
-    <div id="container">
-        <div class="circle" id="center"></div>
-        <div class="circle" id="circle1"></div>
-        <div class="circle" id="circle2"></div>
-        <div class="circle" id="circle3"></div>
-        <div class="circle" id="circle4"></div>
-        <div class="circle" id="circle5"></div>
-        <div class="circle" id="circle6"></div>
+    <div id="plate">
+        <div class="container">
+            <div class="circle" id="center">
+                <a class="circleText" id="centerText">BSA</a>
+                <div class="menu" id="centerMenu">
+                    <div>BSA</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle1"></div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle2"></div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle3"></div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle4"></div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle5"></div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle6"></div>
+        </div>
     </div>
 
     <script>
+        //Setup
         const relativeSize = 0.2;
-        const container = document.getElementById("container");
+        const plate = document.getElementById("plate");
         const center = document.getElementById("center");
 
         const circles = [];
@@ -50,28 +110,55 @@
             circles.push(document.getElementById("circle" + i));
         }
 
-        //Resize circles 
-        center.style.width = (container.offsetWidth * relativeSize) + "px";
-        center.style.height = (container.offsetHeight * relativeSize) + "px";
-        for(let i=0; i<6; i++){
-            circles[i].style.width = (container.offsetWidth * relativeSize) + "px";
-            circles[i].style.height = (container.offsetHeight * relativeSize) + "px";
+        const centerMenu = document.getElementById("centerMenu");
+        centerMenu.style.visibility = "hidden";
+
+        const centerText = document.getElementById("centerText");
+
+        //Resize Circles 
+        center.style.width = (plate.offsetWidth * relativeSize) + "px";
+        center.style.height = (plate.offsetHeight * relativeSize) + "px";
+        for(let i=0; i<circles.length; i++){
+            circles[i].style.width = (plate.offsetWidth * relativeSize) + "px";
+            circles[i].style.height = (plate.offsetHeight * relativeSize) + "px";
         }
 
-        center.style.left = (container.offsetWidth/2 - center.offsetWidth/2) + "px";
-        center.style.top = (container.offsetHeight/2 - center.offsetHeight/2) + "px";
+        //Place Center Circle 
+        center.style.left = (plate.offsetWidth/2 - center.offsetWidth/2) + "px";
+        center.style.top = (plate.offsetHeight/2 - center.offsetHeight/2) + "px";
 
-        let containerPadding = container.offsetWidth*0.05;
+        const platePadding = plate.offsetWidth*0.05;
 
+        //Place Other Circles
         for(let i=0; i<6; i++){
-            circles[i].style.left = (container.offsetWidth/2 + Math.cos(Math.PI*2/6*i)*(container.offsetWidth/2 - circles[i].offsetWidth/2 - containerPadding)) - circles[i].offsetHeight/2 + "px";
-            circles[i].style.top = (container.offsetHeight/2 - Math.sin(Math.PI*2/6*i)*(container.offsetHeight/2 - circles[i].offsetWidth/2 - containerPadding) - circles[i].offsetHeight/2 - center.offsetHeight*(i+1)) + "px";
-
-            console.log("Circle " + i + ": ");
-
-            console.log("x: " + (container.offsetWidth/2 + Math.cos(Math.PI*2/6*i)*container.offsetWidth/2 /*- circles[i].offsetWidth/2*/));
-            console.log("y: " + (container.offsetWidth/2 - Math.sin(Math.PI*2/6*i)*container.offsetWidth/2 /*- circles[i].offsetWidth/2*/));
+            circles[i].style.left = (plate.offsetWidth/2 - circles[i].offsetWidth/2 + Math.cos(Math.PI*2/6*i)*(plate.offsetWidth/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
+            circles[i].style.top = (plate.offsetHeight/2 - circles[i].offsetWidth/2 - Math.sin(Math.PI*2/6*i)*(plate.offsetHeight/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
         }
+
+        placeText();
+
+        function placeText(){
+            centerText.style.left = (center.offsetWidth/2 - centerText.offsetWidth/2) + "px";
+            centerText.style.top = (center.offsetHeight/2 - centerText.offsetHeight/2) + "px";
+        }
+
+        function centerClicked(){
+            if(centerMenu.style.visibility == "hidden"){
+                centerMenu.style.visibility = "visible";
+            }
+            else{
+                centerMenu.style.visibility = "hidden";
+            }
+        }
+
+        function menuClicked(e){
+            centerText.innerHTML = e.target.innerHTML;
+            placeText();
+        }
+
+        center.addEventListener("click", () => centerClicked());
+
+        centerMenu.addEventListener("click", (e) => menuClicked(e));
         
     </script>
 </body>
