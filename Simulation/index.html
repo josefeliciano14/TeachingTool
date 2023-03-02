@@ -39,6 +39,7 @@
             border-radius: 50%;
             cursor: pointer;
             user-select: none;
+            z-index: 101;
         }
 
         .menu{
@@ -65,9 +66,16 @@
             font-size: 20px;
             font-weight: bold;
         }
+
+        .canvas{
+            z-index: 100;
+        }
     </style>
 
     <div id="plate">
+        <div class="container">
+            <canvas id="canvas"></canvas>
+        </div>
         <div class="container">
             <div class="circle" id="center">
                 <a class="circleText" id="centerText">BSA</a>
@@ -115,6 +123,11 @@
 
         const centerText = document.getElementById("centerText");
 
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext('2d');
+        canvas.height = 600;
+        canvas.width = 600;
+
         //Resize Circles 
         center.style.width = (plate.offsetWidth * relativeSize) + "px";
         center.style.height = (plate.offsetHeight * relativeSize) + "px";
@@ -159,6 +172,17 @@
         center.addEventListener("click", () => centerClicked());
 
         centerMenu.addEventListener("click", (e) => menuClicked(e));
+
+        //Line
+        let x = Number(center.style.left.toString().replace("px", "")) + 0.6*center.offsetWidth;
+        let y = (Number(circles[2].style.top.toString().replace("px", "")) + Number(center.style.top.toString().replace("px", "")))/2 + circles[2].offsetHeight/2;
+
+        console.log(circles[2].offsetHeight);
+
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x+circles[2].offsetWidth, y);
+        ctx.stroke();
         
     </script>
 </body>
