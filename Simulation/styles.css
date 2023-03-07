@@ -1,0 +1,80 @@
+body{
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+button {
+    background-color: #4CAF50;
+    margin-left: 10%;   
+    color: white; 
+    border: none; 
+    padding: 6px 20px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 18px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+}
+
+button:hover {
+    background-color: #3e8e41; 
+}
+
+#plate{
+    position: relative;
+    background-color: bisque;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+}
+
+.container{
+    position:relative;
+    width: 0px;
+    height: 0px;
+}
+
+.circle{
+    position: relative;
+    background-color: white;
+    opacity: 50%;
+    border: 1px solid black;
+    border-radius: 50%;
+    cursor: pointer;
+    user-select: none;
+    z-index: 101;
+}
+
+.menu{
+    position: relative;
+    width: 140px;
+    background-color: white;
+    cursor: pointer;
+    left: 80px;
+    top: 50px;
+    font-weight: bold;
+}
+
+.menu > div{
+    border: 1px solid black;
+    padding-left: 10px;
+}
+
+.menu > div:hover{
+    background-color: lightgray;
+}
+
+.circleText{
+    position: relative;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.canvas{
+    z-index: 100;
+}

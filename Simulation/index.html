@@ -5,73 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ouchterlony</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <style>
-        body{
-            height: 100vh;
-            width: 100vw;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: sans-serif;
-        }
-
-        #plate{
-            position: relative;
-            background-color: bisque;
-            width: 600px;
-            height: 600px;
-            border-radius: 50%;
-        }
-
-        .container{
-            position:relative;
-            width: 0px;
-            height: 0px;
-        }
-
-        .circle{
-            position: relative;
-            background-color: white;
-            opacity: 50%;
-            border: 1px solid black;
-            border-radius: 50%;
-            cursor: pointer;
-            user-select: none;
-            z-index: 101;
-        }
-
-        .menu{
-            position: relative;
-            width: 140px;
-            background-color: white;
-            cursor: pointer;
-            left: 80px;
-            top: 50px;
-            font-weight: bold;
-        }
-
-        .menu > div{
-            border: 1px solid black;
-            padding-left: 10px;
-        }
-
-        .menu > div:hover{
-            background-color: lightgray;
-        }
-
-        .circleText{
-            position: relative;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .canvas{
-            z-index: 100;
-        }
-    </style>
-
     <div id="plate">
         <div class="container">
             <canvas id="canvas"></canvas>
@@ -81,6 +17,7 @@
                 <a class="circleText" id="centerText"></a>
                 <div class="menu" id="centerMenu">
                     <div>BSA</div>
+                    <div>HSA</div>
                     <div>Anti-BSA</div>
                     <div>Anti-HSA</div>
                     <div>Anti-HSA + BSA</div>
@@ -92,6 +29,7 @@
                 <a class="circleText" id="circle1Text"></a>
                 <div class="menu" id="circle1Menu">
                     <div>BSA</div>
+                    <div>HSA</div>
                     <div>Anti-BSA</div>
                     <div>Anti-HSA</div>
                     <div>Anti-HSA + BSA</div>
@@ -103,6 +41,7 @@
                 <a class="circleText" id="circle2Text"></a>
                 <div class="menu" id="circle2Menu">
                     <div>BSA</div>
+                    <div>HSA</div>
                     <div>Anti-BSA</div>
                     <div>Anti-HSA</div>
                     <div>Anti-HSA + BSA</div>
@@ -114,6 +53,7 @@
                 <a class="circleText" id="circle3Text"></a>
                 <div class="menu" id="circle3Menu">
                     <div>BSA</div>
+                    <div>HSA</div>
                     <div>Anti-BSA</div>
                     <div>Anti-HSA</div>
                     <div>Anti-HSA + BSA</div>
@@ -125,6 +65,7 @@
                 <a class="circleText" id="circle4Text"></a>
                 <div class="menu" id="circle4Menu">
                     <div>BSA</div>
+                    <div>HSA</div>
                     <div>Anti-BSA</div>
                     <div>Anti-HSA</div>
                     <div>Anti-HSA + BSA</div>
@@ -136,6 +77,7 @@
                 <a class="circleText" id="circle5Text"></a>
                 <div class="menu" id="circle5Menu">
                     <div>BSA</div>
+                    <div>HSA</div>
                     <div>Anti-BSA</div>
                     <div>Anti-HSA</div>
                     <div>Anti-HSA + BSA</div>
@@ -147,6 +89,7 @@
                 <a class="circleText" id="circle6Text"></a>
                 <div class="menu" id="circle6Menu">
                     <div>BSA</div>
+                    <div>HSA</div>
                     <div>Anti-BSA</div>
                     <div>Anti-HSA</div>
                     <div>Anti-HSA + BSA</div>
@@ -155,256 +98,8 @@
         </div>
     </div>
 
-    <script>
-        //Setup
-        const relativeSize = 0.2;
-        const plate = document.getElementById("plate");
-        const center = document.getElementById("center");
+    <button id="results-btn">Results</button>
 
-        const circles = [];
-        for(let i=1; i<=6; i++){
-            circles.push(document.getElementById("circle" + i));
-        }
-
-        const centerMenu = document.getElementById("centerMenu");
-        centerMenu.style.visibility = "hidden";
-
-        const circle1Menu = document.getElementById("circle1Menu");
-        circle1Menu.style.visibility = "hidden";
-
-        const circle2Menu = document.getElementById("circle2Menu");
-        circle2Menu.style.visibility = "hidden";
-
-        const circle3Menu = document.getElementById("circle3Menu");
-        circle3Menu.style.visibility = "hidden";
-
-        const circle4Menu = document.getElementById("circle4Menu");
-        circle4Menu.style.visibility = "hidden";
-
-        const circle5Menu = document.getElementById("circle5Menu");
-        circle5Menu.style.visibility = "hidden";
-
-        const circle6Menu = document.getElementById("circle6Menu");
-        circle6Menu.style.visibility = "hidden";
-
-        const centerText = document.getElementById("centerText");
-        centerText.style.visibility = "hidden";
-
-        const circle1Text = document.getElementById("circle1Text");
-        circle1Text.style.visibility = "hidden";
-
-        const circle2Text = document.getElementById("circle2Text");
-        circle2Text.style.visibility = "hidden";
-
-        const circle3Text = document.getElementById("circle3Text");
-        circle3Text.style.visibility = "hidden";
-
-        const circle4Text = document.getElementById("circle4Text");
-        circle4Text.style.visibility = "hidden";
-
-        const circle5Text = document.getElementById("circle5Text");
-        circle5Text.style.visibility = "hidden";
-
-        const circle6Text = document.getElementById("circle6Text");
-        circle6Text.style.visibility = "hidden";
-
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext('2d');
-        canvas.height = 600;
-        canvas.width = 600;
-
-        //Resize Circles 
-        center.style.width = (plate.offsetWidth * relativeSize) + "px";
-        center.style.height = (plate.offsetHeight * relativeSize) + "px";
-        for(let i=0; i<circles.length; i++){
-            circles[i].style.width = (plate.offsetWidth * relativeSize) + "px";
-            circles[i].style.height = (plate.offsetHeight * relativeSize) + "px";
-        }
-
-        //Place Center Circle 
-        center.style.left = (plate.offsetWidth/2 - center.offsetWidth/2) + "px";
-        center.style.top = (plate.offsetHeight/2 - center.offsetHeight/2) + "px";
-
-        const platePadding = plate.offsetWidth*0.05;
-
-        //Place Other Circles
-        for(let i=0; i<6; i++){
-            circles[i].style.left = (plate.offsetWidth/2 - circles[i].offsetWidth/2 + Math.cos(Math.PI*2/6*i)*(plate.offsetWidth/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
-            circles[i].style.top = (plate.offsetHeight/2 - circles[i].offsetWidth/2 - Math.sin(Math.PI*2/6*i)*(plate.offsetHeight/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
-        }
-
-
-        function placeText(e){
-            const eventID = e.target.offsetParent.id;
-            switch (eventID) {
-                case "centerMenu":
-                    centerText.style.visibility = "visible";
-                    centerText.style.left = (center.offsetWidth/2 - centerText.offsetWidth/2) + "px";
-                    centerText.style.top = (center.offsetHeight/2 - centerText.offsetHeight/2) + "px";
-                    break;
-                case "circle1Menu":
-                    circle1Text.style.visibility = "visible";
-                    circle1Text.style.left = (center.offsetWidth/2 - circle1Text.offsetWidth/2) + "px";
-                    circle1Text.style.top = (center.offsetHeight/2 - circle1Text.offsetHeight/2) + "px";
-                    break;
-                case "circle2Menu":
-                    circle2Text.style.visibility = "visible";
-                    circle2Text.style.left = (center.offsetWidth/2 - circle2Text.offsetWidth/2) + "px";
-                    circle2Text.style.top = (center.offsetHeight/2 - circle2Text.offsetHeight/2) + "px";
-                    break;
-                case "circle3Menu":
-                    circle3Text.style.visibility = "visible";
-                    circle3Text.style.left = (center.offsetWidth/2 - circle3Text.offsetWidth/2) + "px";
-                    circle3Text.style.top = (center.offsetHeight/2 - circle3Text.offsetHeight/2) + "px";
-                    break;
-                case "circle4Menu":
-                    circle4Text.style.visibility = "visible";
-                    circle4Text.style.left = (center.offsetWidth/2 - circle4Text.offsetWidth/2) + "px";
-                    circle4Text.style.top = (center.offsetHeight/2 - circle4Text.offsetHeight/2) + "px";
-                    break;
-                case "circle5Menu":
-                    circle5Text.style.visibility = "visible";
-                    circle5Text.style.left = (center.offsetWidth/2 - circle5Text.offsetWidth/2) + "px";
-                    circle5Text.style.top = (center.offsetHeight/2 - circle5Text.offsetHeight/2) + "px";
-                    break;
-                case "circle6Menu":
-                    circle6Text.style.visibility = "visible";
-                    circle6Text.style.left = (center.offsetWidth/2 - circle6Text.offsetWidth/2) + "px";
-                    circle6Text.style.top = (center.offsetHeight/2 - circle6Text.offsetHeight/2) + "px";
-                    break;
-            }
-            
-        }
-
-        function centerClicked(){
-            if(centerMenu.style.visibility == "hidden"){
-                centerMenu.style.visibility = "visible";
-            }
-            else{
-                centerMenu.style.visibility = "hidden";
-            }
-        }
-
-        function menuClicked(e){
-            const eventID = e.target.offsetParent.id;
-            switch (eventID) {
-                case "centerMenu":
-                    centerText.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-                case "circle1Menu":
-                    circle1Text.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-                case "circle2Menu":
-                    circle2Text.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-                case "circle3Menu":
-                    circle3Text.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-                case "circle4Menu":
-                    circle4Text.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-                case "circle4Menu":
-                    circle4Text.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-                case "circle5Menu":
-                    circle5Text.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-                case "circle6Menu":
-                    circle6Text.innerHTML = e.target.innerHTML;
-                    placeText(e);
-                    break;
-            }
-                       
-        }
-
-        function circleClicked(i){
-            switch (i){
-                case 1: 
-                    if(circle1Menu.style.visibility == "hidden"){
-                        circle1Menu.style.visibility = "visible";
-                    }
-                    else{
-                        circle1Menu.style.visibility = "hidden";
-                    }
-                    break;
-                case 2: 
-                    if(circle2Menu.style.visibility == "hidden"){
-                        circle2Menu.style.visibility = "visible";
-                    }
-                    else{
-                        circle2Menu.style.visibility = "hidden";
-                    }
-                    break;
-                case 3: 
-                    if(circle3Menu.style.visibility == "hidden"){
-                        circle3Menu.style.visibility = "visible";
-                    }
-                    else{
-                        circle3Menu.style.visibility = "hidden";
-                    }
-                    break;
-                case 4: 
-                    if(circle4Menu.style.visibility == "hidden"){
-                        circle4Menu.style.visibility = "visible";
-                    }
-                    else{
-                        circle4Menu.style.visibility = "hidden";
-                    }
-                    break;
-                case 5: 
-                    if(circle5Menu.style.visibility == "hidden"){
-                        circle5Menu.style.visibility = "visible";
-                    }
-                    else{
-                        circle5Menu.style.visibility = "hidden";
-                    }
-                    break;
-                case 6: 
-                    if(circle6Menu.style.visibility == "hidden"){
-                        circle6Menu.style.visibility = "visible";
-                    }
-                    else{
-                        circle6Menu.style.visibility = "hidden";
-                    }
-                    break;
-            }
-        }
-
-        center.addEventListener("click", () => centerClicked());
-
-        centerMenu.addEventListener("click", (e) => menuClicked(e));
-        circle1Menu.addEventListener("click", (e) => menuClicked(e));
-        circle2Menu.addEventListener("click", (e) => menuClicked(e));
-        circle3Menu.addEventListener("click", (e) => menuClicked(e));
-        circle4Menu.addEventListener("click", (e) => menuClicked(e));
-        circle5Menu.addEventListener("click", (e) => menuClicked(e));
-        circle6Menu.addEventListener("click", (e) => menuClicked(e));
-        
-
-        //Event listener circles 1-6
-        for (let i = 1; i <= 6; i++) {
-            const circle = document.getElementById(`circle${i}`);
-            circle.addEventListener("click", () => {circleClicked(i)});
-        }
-
-        //Line
-        let x = Number(center.style.left.toString().replace("px", "")) + 0.6*center.offsetWidth;
-        let y = (Number(circles[2].style.top.toString().replace("px", "")) + Number(center.style.top.toString().replace("px", "")))/2 + circles[2].offsetHeight/2;
-
-        console.log(circles[2].offsetHeight);
-
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-        ctx.lineTo(x+circles[2].offsetWidth, y);
-        ctx.stroke();
-        
-    </script>
+    <script src="index.js" charset="utf-8"></script>
 </body>
 </html>
