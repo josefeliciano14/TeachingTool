@@ -346,7 +346,7 @@ function circle3Curve1(){
     ctx.beginPath();
     ctx.strokeStyle = "red";
     ctx.bezierCurveTo(mpC2C3_x+18, mpC2C3_y+70, mpC2C3_x+2, mpC2C3_y+64, mpC2C3_x-14, mpC2C3_y+70);
-    ctx.moveTo(mpC3C4_x+40, mpC3C4_y-12);
+    ctx.moveTo(mpC3C4_x+36, mpC3C4_y-12);
     ctx.lineTo(center_x - 14, (center_y - mpC2C3_y)+7.7);
     ctx.stroke();
 }
@@ -557,6 +557,181 @@ function centerBSA(a,b,c,d,e,f,g){
     }
 }
 
+function centerHSA(a,b,c,d,e,f,g){
+    centerValue = a;
+    circle1Value = b;
+    circle2Value = c;
+    circle3Value = d;
+    circle4Value = e; 
+    circle5Value = f;
+    circle6Value = g;
+
+    for(let i = 1; i <= 6; i++) {
+        if(centerValue == "HSA"){
+
+            switch(i) {
+                case 1:
+                    if(circle1Value == "Anti-BSA"){
+                        if(circle2Value == "Anti-BSA" || circle2Value == "Anti-HSA" || circle2Value == "Anti-HSA + BSA"){
+                            circle1Curve1();
+                            circle2Curve1();
+                        }
+                    }
+                    else if(circle1Value == "Anti-HSA"){
+                        if(circle2Value == "Anti-BSA" || circle2Value == "Anti-HSA" || circle2Value == "Anti-HSA + BSA"){
+                            circle1Curve1();
+                            circle2Curve1();
+                        }
+                        else if((circle2Value == "BSA" || circle2Value == "HSA")&&(circle6Value == "BSA" || circle6Value == "HSA")){
+                            circle1StraightLine();
+                        }
+                    }
+                    else if(circle1Value == "Anti-HSA + BSA"){
+                        if(circle2Value == "Anti-BSA" || circle2Value == "Anti-HSA" || circle2Value == "Anti-HSA + BSA"){
+                            circle1Curve1();
+                            circle2Curve1();
+                        }
+                        else if((circle2Value == "BSA" || circle2Value == "HSA")&&(circle6Value == "BSA" || circle6Value == "HSA")){
+                            circle1StraightLine();
+                        }
+                    }
+                    continue;
+                case 2:
+                    if(circle2Value == "Anti-BSA"){
+                        if(circle3Value == "Anti-BSA" || circle3Value == "Anti-HSA" || circle3Value == "Anti-HSA + BSA"){
+                            circle3Curve1();
+                            circle2Curve2();
+                        }
+                    }
+                    else if(circle2Value == "Anti-HSA"){
+                        if(circle3Value == "Anti-BSA" || circle3Value == "Anti-HSA" || circle3Value == "Anti-HSA + BSA"){
+                            circle3Curve1();
+                            circle2Curve2();
+                        }
+                        else if((circle3Value == "BSA" || circle3Value == "HSA")&&(circle1Value == "BSA" || circle1Value == "HSA")){
+                            circle2StraightLine();
+                        }
+                    }
+                    else if(circle2Value == "Anti-HSA + BSA"){
+                        if(circle3Value == "Anti-BSA" || circle3Value == "Anti-HSA" || circle3Value == "Anti-HSA + BSA"){
+                            circle3Curve1();
+                            circle2Curve2();
+                        }
+                        else if((circle3Value == "BSA" || circle3Value == "HSA")&&(circle1Value == "BSA" || circle1Value == "HSA")){
+                            circle2StraightLine();
+                        }
+                    }
+                    continue;
+                case 3:
+                    if(circle3Value == "Anti-BSA"){
+                        if(circle4Value == "Anti-BSA" || circle4Value == "Anti-HSA" || circle4Value == "Anti-HSA + BSA"){
+                            circle3Curve2();
+                            circle4Curve1();  
+                        }
+                    }
+                    else if(circle3Value == "Anti-HSA"){
+                        if(circle4Value == "Anti-BSA" || circle4Value == "Anti-HSA" || circle4Value == "Anti-HSA + BSA"){
+                            circle3Curve2();
+                            circle4Curve1();
+                        }
+                        else if((circle4Value == "BSA" || circle4Value == "HSA")&&(circle2Value == "BSA" || circle2Value == "HSA")){
+                            circle3StraightLine();
+                        }
+                    }
+                    else if(circle3Value == "Anti-HSA + BSA"){
+                        if(circle4Value == "Anti-BSA" || circle4Value == "Anti-HSA" || circle4Value == "Anti-HSA + BSA"){
+                            circle3Curve2();
+                            circle4Curve1();
+                        }
+                        else if((circle4Value == "BSA" || circle4Value == "HSA")&&(circle2Value == "BSA" || circle2Value == "HSA")){
+                            circle3StraightLine();
+                        }
+                    }
+                    continue;
+                case 4:
+                    if(circle4Value == "Anti-BSA"){
+                        if(circle5Value == "Anti-BSA" || circle5Value == "Anti-HSA" || circle5Value == "Anti-HSA + BSA"){
+                            circle4Curve2();
+                            circle5Curve1();
+                        }
+                    }
+                    else if(circle4Value == "Anti-HSA"){
+                        if(circle5Value == "Anti-BSA" || circle5Value == "Anti-HSA" || circle5Value == "Anti-HSA + BSA"){
+                            circle4Curve2();
+                            circle5Curve1();
+                        }
+                        else if((circle5Value == "BSA" || circle5Value == "HSA")&&(circle3Value == "BSA" || circle3Value == "HSA")){
+                            circle4StraightLine();
+                        }
+                    }
+                    else if(circle4Value == "Anti-HSA + BSA"){
+                        if(circle5Value == "Anti-BSA" || circle5Value == "Anti-HSA" || circle5Value == "Anti-HSA + BSA"){
+                            circle4Curve2();
+                            circle5Curve1();
+                        }
+                        else if((circle5Value == "BSA" || circle5Value == "HSA")&&(circle3Value == "BSA" || circle3Value == "HSA")){
+                            circle4StraightLine();
+                        }
+                    }
+                    continue;
+                case 5:
+                    if(circle5Value == "Anti-BSA"){
+                        if(circle6Value == "Anti-BSA" || circle6Value == "Anti-HSA" || circle6Value == "Anti-HSA + BSA"){
+                            circle5Curve2();
+                            circle6Curve2();
+                        }
+                    }
+                    else if(circle5Value == "Anti-HSA"){
+                        if(circle6Value == "Anti-BSA" || circle6Value == "Anti-HSA" || circle6Value == "Anti-HSA + BSA"){
+                            circle5Curve2();
+                            circle6Curve2();
+                        }
+                        else if((circle6Value == "BSA" || circle6Value == "HSA")&&(circle4Value == "BSA" || circle4Value == "HSA")){
+                            circle5StraightLine();
+                        }
+                    }
+                    else if(circle5Value == "Anti-HSA + BSA"){
+                        if(circle6Value == "Anti-BSA" || circle6Value == "Anti-HSA" || circle6Value == "Anti-HSA + BSA"){
+                            circle5Curve2();
+                            circle6Curve2();
+                        }
+                        else if((circle6Value == "BSA" || circle6Value == "HSA")&&(circle4Value == "BSA" || circle4Value == "HSA")){
+                            circle5StraightLine();
+                        }
+                    }
+                    continue;
+                case 6:
+                    if(circle6Value == "Anti-BSA"){
+                        if(circle1Value == "Anti-BSA" || circle1Value == "Anti-HSA" || circle1Value == "Anti-HSA + BSA"){
+                            circle6Curve1();
+                            circle1Curve2();
+                        }
+                    }
+                    else if(circle6Value == "Anti-HSA"){
+                        if(circle1Value == "Anti-BSA" || circle1Value == "Anti-HSA" || circle1Value == "Anti-HSA + BSA"){
+                            circle6Curve1();
+                            circle1Curve2();
+                        }
+                        else if((circle1Value == "BSA" || circle1Value == "HSA")&&(circle5Value == "BSA" || circle5Value == "HSA")){
+                            circle6StraightLine();
+                        }
+                    }
+                    else if(circle6Value == "Anti-HSA + BSA"){
+                        if(circle1Value == "Anti-BSA" || circle1Value == "Anti-HSA" || circle1Value == "Anti-HSA + BSA"){
+                            circle6Curve1();
+                            circle1Curve2();
+                        }
+                        else if((circle1Value == "BSA" || circle1Value == "HSA")&&(circle5Value == "BSA" || circle5Value == "HSA")){
+                            circle6StraightLine();
+                        }
+                    }
+                    continue;
+            }
+        }
+    
+    }
+}
+
 function drawLines(){
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
@@ -573,6 +748,7 @@ function drawLines(){
     const circle6Value = document.getElementById('circle6Text').innerHTML;
 
     centerBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+    centerHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
 }
     
 
@@ -585,6 +761,7 @@ function handleResultButtonClick(e) {
 }
 
 //Line
+
 
 
 
