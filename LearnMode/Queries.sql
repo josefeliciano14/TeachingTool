@@ -25,3 +25,5 @@ CREATE TABLE Questions(qid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, evaluation I
 CREATE TABLE Options(oid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, question INT NOT NULL, FOREIGN KEY (question) REFERENCES Questions(qid), answer TEXT NOT NULL, ind INT);
 
 CREATE TABLE Scores(uid INT NOT NULL, FOREIGN KEY (uid) REFERENCES Users(uid), evaluation INT NOT NULL, FOREIGN KEY (evaluation) REFERENCES Evaluations(eid), score INT NOT NULL, max_score INT NOT NULL, PRIMARY KEY(uid, evaluation));
+
+SELECT * FROM Users
