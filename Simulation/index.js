@@ -285,6 +285,20 @@ function circle1StraightLine(){
     ctx.stroke(); 
 
 }
+function circle1Line1(){
+    ctx.beginPath();
+    ctx.strokeStyle = "purple";
+    ctx.moveTo(mpC1C2_x - 15, mpC1C2_y + 10);
+    ctx.lineTo(mpC6C1_x - 15, mpC6C1_y + 18);
+    ctx.stroke(); 
+}
+function circle1Line2(){
+    ctx.beginPath();
+    ctx.strokeStyle = "purple";
+    ctx.moveTo(mpC1C2_x - 15, mpC1C2_y - 18);
+    ctx.lineTo(mpC6C1_x - 15, mpC6C1_y - 20);
+    ctx.stroke(); 
+}
 //Draws circle1 Bezier curve above
 function circle1Curve1(){
     ctx.beginPath();
@@ -308,10 +322,24 @@ function circle1Curve2(){
 function circle2StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "green";
-    ctx.moveTo(mpC1C2_x, mpC1C2_y);
-    ctx.lineTo(center_x -15, center_y - mpC2C3_y);
+    ctx.moveTo(mpC1C2_x - 4, mpC1C2_y);
+    ctx.lineTo(center_x -15, (center_y - mpC2C3_y)-2);
     ctx.stroke();
 
+}
+function circle2Line1(){
+    ctx.beginPath();
+    ctx.strokeStyle = "green";
+    ctx.moveTo(mpC1C2_x -28, mpC1C2_y-7.5);
+    ctx.lineTo(center_x -15, (center_y - mpC2C3_y)-2);
+    ctx.stroke();
+}
+function circle2Line2(){
+    ctx.beginPath();
+    ctx.strokeStyle = "green";
+    ctx.moveTo(mpC1C2_x - 4, mpC1C2_y);
+    ctx.lineTo(center_x + 18, (center_y - mpC2C3_y)+8);
+    ctx.stroke();
 }
 //Draws line 2 with benzier curve to right
 function circle2Curve1(){
@@ -337,8 +365,22 @@ function circle2Curve2(){
 function circle3StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "red";
-    ctx.moveTo(mpC3C4_x, mpC3C4_y);
-    ctx.lineTo(center_x + 15, center_y - mpC2C3_y);
+    ctx.moveTo(mpC3C4_x, mpC3C4_y-2);
+    ctx.lineTo(center_x + 15, (center_y - mpC2C3_y)-2);
+    ctx.stroke();
+}
+function circle3Line1(){
+    ctx.beginPath();
+    ctx.strokeStyle = "red";
+    ctx.moveTo(mpC3C4_x, mpC3C4_y-2);
+    ctx.lineTo(center_x - 12, (center_y - mpC2C3_y)+6);
+    ctx.stroke();
+}
+function circle3Line2(){
+    ctx.beginPath();
+    ctx.strokeStyle = "red";
+    ctx.moveTo(mpC3C4_x + 27, mpC3C4_y-9.5);
+    ctx.lineTo(center_x + 15, (center_y - mpC2C3_y)-2);
     ctx.stroke();
 }
 //Draws line 3 with benzier curve to right
@@ -364,8 +406,22 @@ function circle3Curve2(){
 function circle4StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "yellow";
-    ctx.moveTo(mpC3C4_x + 15, mpC3C4_y - 18);
+    ctx.moveTo(mpC3C4_x + 14.5, mpC3C4_y - 18);
     ctx.lineTo(mpC4C5_x + 15, mpC4C5_y + 18);
+    ctx.stroke();
+}
+function circle4Line1(){
+    ctx.beginPath();
+    ctx.strokeStyle = "yellow";
+    ctx.moveTo(mpC3C4_x + 14.5, mpC3C4_y + 10);
+    ctx.lineTo(mpC4C5_x + 15, mpC4C5_y + 18);
+    ctx.stroke();
+}
+function circle4Line2(){
+    ctx.beginPath();
+    ctx.strokeStyle = "yellow";
+    ctx.moveTo(mpC3C4_x + 14.5, mpC3C4_y - 18);
+    ctx.lineTo(mpC4C5_x + 15, mpC4C5_y - 18);
     ctx.stroke();
 }
 function circle4Curve1(){
@@ -389,8 +445,22 @@ function circle4Curve2(){
 function circle5StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "blue";
-    ctx.moveTo(mpC4C5_x, mpC4C5_y-1);
-    ctx.lineTo(center_x + 15, center_y + mpC2C3_y);
+    ctx.moveTo(mpC4C5_x, mpC4C5_y-3);
+    ctx.lineTo(center_x + 15, (center_y + mpC2C3_y)+1.5);
+    ctx.stroke();
+}
+function circle5Line1(){
+    ctx.beginPath();
+    ctx.strokeStyle = "blue";
+    ctx.moveTo(mpC4C5_x +35, mpC4C5_y+8);
+    ctx.lineTo(center_x + 15, (center_y + mpC2C3_y)+1.5);
+    ctx.stroke();
+}
+function circle5Line2(){
+    ctx.beginPath();
+    ctx.strokeStyle = "blue";
+    ctx.moveTo(mpC4C5_x, mpC4C5_y-2);
+    ctx.lineTo(center_x - 15, (center_y + mpC2C3_y)-8);
     ctx.stroke();
 }
 function circle5Curve1(){
@@ -417,6 +487,20 @@ function circle6StraightLine(){
     ctx.strokeStyle = "orange";
     ctx.moveTo(mpC6C1_x, mpC6C1_y);
     ctx.lineTo(center_x - 15, center_y + mpC2C3_y);
+    ctx.stroke();
+}
+function circle6Line1(){
+    ctx.beginPath();
+    ctx.strokeStyle = "orange";
+    ctx.moveTo(mpC6C1_x -30, mpC6C1_y +8.3);
+    ctx.lineTo(center_x - 15, center_y + mpC2C3_y);
+    ctx.stroke();
+}
+function circle6Line2(){
+    ctx.beginPath();
+    ctx.strokeStyle = "orange";
+    ctx.moveTo(mpC6C1_x, mpC6C1_y);
+    ctx.lineTo(center_x +15, (center_y + mpC2C3_y)-8);
     ctx.stroke();
 }
 function circle6Curve1(){
@@ -455,7 +539,7 @@ function centerBSA(a,b,c,d,e,f,g){
                             circle1Curve1();
                             circle2Curve1();
                         }
-                        else if((circle2Value == "BSA" || circle2Value == "HSA" || circle2Value == "Anti-HSA + BSA")&&(circle6Value == "BSA" || circle6Value == "HSA" || circle6Value == "Anti-HSA + BSA")){
+                        else if((circle2Value == "BSA" || circle2Value == "HSA" || circle2Value == "Anti-HSA + BSA"||circle2Value == '')&&(circle6Value == "BSA" || circle6Value == "HSA" || circle6Value == "Anti-HSA + BSA"||circle6Value == '')){  
                             circle1StraightLine();
                         }
                     }
@@ -472,7 +556,7 @@ function centerBSA(a,b,c,d,e,f,g){
                             circle3Curve1();
                             circle2Curve2();
                         }
-                        else if((circle3Value == "BSA" || circle3Value == "HSA" || circle3Value == "Anti-HSA + BSA")&&(circle1Value == "BSA" || circle1Value == "HSA" || circle1Value == "Anti-HSA + BSA")){
+                        else if((circle3Value == "BSA" || circle3Value == "HSA" || circle3Value == "Anti-HSA + BSA"|| circle3Value == '')&&(circle1Value == "BSA" || circle1Value == "HSA" || circle1Value == "Anti-HSA + BSA"|| circle1Value == '')){
                             circle2StraightLine();
                         }
                     }
@@ -489,7 +573,7 @@ function centerBSA(a,b,c,d,e,f,g){
                             circle4Curve1();
                             circle3Curve2();
                         }
-                        else if((circle4Value == "BSA" || circle4Value == "HSA" || circle4Value == "Anti-HSA + BSA")&&(circle2Value == "BSA" || circle2Value == "HSA" || circle2Value == "Anti-HSA + BSA")){
+                        else if((circle4Value == "BSA" || circle4Value == "HSA" || circle4Value == "Anti-HSA + BSA"|| circle4Value == '')&&(circle2Value == "BSA" || circle2Value == "HSA" || circle2Value == "Anti-HSA + BSA"|| circle2Value == '')){
                             circle3StraightLine();
                         }
                     }
@@ -506,7 +590,7 @@ function centerBSA(a,b,c,d,e,f,g){
                             circle5Curve1();
                             circle4Curve2();
                         }
-                        else if((circle5Value == "BSA" || circle5Value == "HSA" || circle5Value == "Anti-HSA + BSA")&&(circle3Value == "BSA" || circle3Value == "HSA" || circle3Value == "Anti-HSA + BSA")){
+                        else if((circle5Value == "BSA" || circle5Value == "HSA" || circle5Value == "Anti-HSA + BSA"|| circle5Value == '')&&(circle3Value == "BSA" || circle3Value == "HSA" || circle3Value == "Anti-HSA + BSA"|| circle3Value == '')){
                             circle4StraightLine();
                         }
                     }
@@ -523,7 +607,7 @@ function centerBSA(a,b,c,d,e,f,g){
                             circle5Curve2();
                             circle6Curve2();
                         }
-                        else if((circle6Value == "BSA" || circle6Value == "HSA" || circle6Value == "Anti-HSA + BSA")&&(circle4Value == "BSA" || circle4Value == "HSA" || circle4Value == "Anti-HSA + BSA")){
+                        else if((circle6Value == "BSA" || circle6Value == "HSA" || circle6Value == "Anti-HSA + BSA"|| circle6Value == '')&&(circle4Value == "BSA" || circle4Value == "HSA" || circle4Value == "Anti-HSA + BSA"|| circle4Value == '')){
                             circle5StraightLine();
                         }
                     }
@@ -540,7 +624,7 @@ function centerBSA(a,b,c,d,e,f,g){
                             circle6Curve1();
                             circle1Curve2();
                         }
-                        else if((circle1Value == "BSA" || circle1Value == "HSA" || circle1Value == "Anti-HSA + BSA")&&(circle5Value == "BSA" || circle5Value == "HSA" || circle5Value == "Anti-HSA + BSA")){
+                        else if((circle1Value == "BSA" || circle1Value == "HSA" || circle1Value == "Anti-HSA + BSA"|| circle1Value == '')&&(circle5Value == "BSA" || circle5Value == "HSA" || circle5Value == "Anti-HSA + BSA"|| circle5Value == '')){
                             circle6StraightLine();
                         }
                     }
@@ -582,7 +666,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle1Curve1();
                             circle2Curve1();
                         }
-                        else if((circle2Value == "BSA" || circle2Value == "HSA")&&(circle6Value == "BSA" || circle6Value == "HSA")){
+                        else if((circle2Value == "BSA" || circle2Value == "HSA"|| circle2Value == '')&&(circle6Value == "BSA" || circle6Value == "HSA"|| circle6Value == '')){
                             circle1StraightLine();
                         }
                     }
@@ -591,7 +675,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle1Curve1();
                             circle2Curve1();
                         }
-                        else if((circle2Value == "BSA" || circle2Value == "HSA")&&(circle6Value == "BSA" || circle6Value == "HSA")){
+                        else if((circle2Value == "BSA" || circle2Value == "HSA"|| circle2Value == '')&&(circle6Value == "BSA" || circle6Value == "HSA"|| circle6Value == '')){
                             circle1StraightLine();
                         }
                     }
@@ -608,7 +692,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle3Curve1();
                             circle2Curve2();
                         }
-                        else if((circle3Value == "BSA" || circle3Value == "HSA")&&(circle1Value == "BSA" || circle1Value == "HSA")){
+                        else if((circle3Value == "BSA" || circle3Value == "HSA"|| circle3Value == '')&&(circle1Value == "BSA" || circle1Value == "HSA"|| circle1Value == '')){
                             circle2StraightLine();
                         }
                     }
@@ -617,7 +701,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle3Curve1();
                             circle2Curve2();
                         }
-                        else if((circle3Value == "BSA" || circle3Value == "HSA")&&(circle1Value == "BSA" || circle1Value == "HSA")){
+                        else if((circle3Value == "BSA" || circle3Value == "HSA"|| circle3Value == '')&&(circle1Value == "BSA" || circle1Value == "HSA"|| circle1Value == '')){
                             circle2StraightLine();
                         }
                     }
@@ -634,7 +718,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle3Curve2();
                             circle4Curve1();
                         }
-                        else if((circle4Value == "BSA" || circle4Value == "HSA")&&(circle2Value == "BSA" || circle2Value == "HSA")){
+                        else if((circle4Value == "BSA" || circle4Value == "HSA"|| circle4Value == '')&&(circle2Value == "BSA" || circle2Value == "HSA"|| circle2Value == '')){
                             circle3StraightLine();
                         }
                     }
@@ -643,7 +727,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle3Curve2();
                             circle4Curve1();
                         }
-                        else if((circle4Value == "BSA" || circle4Value == "HSA")&&(circle2Value == "BSA" || circle2Value == "HSA")){
+                        else if((circle4Value == "BSA" || circle4Value == "HSA"|| circle4Value == '')&&(circle2Value == "BSA" || circle2Value == "HSA"|| circle2Value == '')){
                             circle3StraightLine();
                         }
                     }
@@ -660,7 +744,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle4Curve2();
                             circle5Curve1();
                         }
-                        else if((circle5Value == "BSA" || circle5Value == "HSA")&&(circle3Value == "BSA" || circle3Value == "HSA")){
+                        else if((circle5Value == "BSA" || circle5Value == "HSA"|| circle5Value == '')&&(circle3Value == "BSA" || circle3Value == "HSA"|| circle3Value == '')){
                             circle4StraightLine();
                         }
                     }
@@ -669,7 +753,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle4Curve2();
                             circle5Curve1();
                         }
-                        else if((circle5Value == "BSA" || circle5Value == "HSA")&&(circle3Value == "BSA" || circle3Value == "HSA")){
+                        else if((circle5Value == "BSA" || circle5Value == "HSA"|| circle5Value == '')&&(circle3Value == "BSA" || circle3Value == "HSA"|| circle3Value == '')){
                             circle4StraightLine();
                         }
                     }
@@ -686,7 +770,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle5Curve2();
                             circle6Curve2();
                         }
-                        else if((circle6Value == "BSA" || circle6Value == "HSA")&&(circle4Value == "BSA" || circle4Value == "HSA")){
+                        else if((circle6Value == "BSA" || circle6Value == "HSA"|| circle6Value == '')&&(circle4Value == "BSA" || circle4Value == "HSA"|| circle4Value == '')){
                             circle5StraightLine();
                         }
                     }
@@ -695,7 +779,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle5Curve2();
                             circle6Curve2();
                         }
-                        else if((circle6Value == "BSA" || circle6Value == "HSA")&&(circle4Value == "BSA" || circle4Value == "HSA")){
+                        else if((circle6Value == "BSA" || circle6Value == "HSA"|| circle6Value == '')&&(circle4Value == "BSA" || circle4Value == "HSA"|| circle4Value == '')){
                             circle5StraightLine();
                         }
                     }
@@ -712,7 +796,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle6Curve1();
                             circle1Curve2();
                         }
-                        else if((circle1Value == "BSA" || circle1Value == "HSA")&&(circle5Value == "BSA" || circle5Value == "HSA")){
+                        else if((circle1Value == "BSA" || circle1Value == "HSA"|| circle1Value == '')&&(circle5Value == "BSA" || circle5Value == "HSA"|| circle5Value == '')){
                             circle6StraightLine();
                         }
                     }
@@ -721,7 +805,7 @@ function centerHSA(a,b,c,d,e,f,g){
                             circle6Curve1();
                             circle1Curve2();
                         }
-                        else if((circle1Value == "BSA" || circle1Value == "HSA")&&(circle5Value == "BSA" || circle5Value == "HSA")){
+                        else if((circle1Value == "BSA" || circle1Value == "HSA"|| circle1Value == '')&&(circle5Value == "BSA" || circle5Value == "HSA"|| circle5Value == '')){
                             circle6StraightLine();
                         }
                     }
@@ -731,6 +815,161 @@ function centerHSA(a,b,c,d,e,f,g){
     
     }
 }
+
+function centerAntiBSA(a,b,c,d,e,f,g){
+    centerValue = a;
+    circle1Value = b;
+    circle2Value = c;
+    circle3Value = d;
+    circle4Value = e; 
+    circle5Value = f;
+    circle6Value = g;
+
+    for(let i = 1; i <= 6; i++) {
+        if(centerValue == "Anti-BSA"){
+
+            switch(i) {
+                case 1:
+                    if(circle1Value == "BSA"){
+                        if(circle2Value == "HSA"){
+                            circle1Line2();
+                            circle2Curve1();
+                        }
+                        else if(circle2Value == "BSA"){ 
+                            circle1Curve1();
+                            circle2Curve1();
+                        }
+                    }
+                    else if(circle1Value == "HSA"){
+                        if(circle2Value == "BSA"){
+                            circle1Curve1();
+                            circle2Line2(); 
+                        }
+                        else if(circle2Value == "HSA"){
+                            circle1Curve1();
+                            circle2Curve1();
+                        }
+                    }
+                    continue;
+                case 2:
+                    if(circle2Value == "BSA"){
+                        if(circle3Value == "HSA"){
+                            circle2Line1(); 
+                            circle3Curve1();
+                        }
+                        else if(circle3Value == "BSA"){  
+                            circle2Curve2();
+                            circle3Curve1();
+                        }
+                    }
+                    else if(circle2Value == "HSA"){
+                        if(circle3Value == "BSA"){
+                            circle2Curve2();
+                            circle3Line2(); 
+                        }
+                        else if(circle3Value == "HSA"){
+                            circle2Curve2();
+                            circle3Curve1();
+                        }
+                    }
+                    continue;
+                case 3:
+                    if(circle3Value == "BSA"){
+                        if(circle4Value == "HSA"){
+                            circle3Line1();  
+                            circle4Curve1();
+                        }
+                        else if(circle4Value == "BSA"){  
+                            circle3Curve2();
+                            circle4Curve1();
+                        }
+                    }
+                    else if(circle3Value == "HSA"){
+                        if(circle4Value == "BSA"){
+                            circle3Curve2();
+                            circle4Line2(); 
+                        }
+                        else if(circle4Value == "HSA"){
+                            circle3Curve2();
+                            circle4Curve1();
+                        }
+                    }
+                    continue;
+                case 4:
+                    if(circle4Value == "BSA"){
+                        if(circle5Value == "HSA"){
+                            circle4Line1(); 
+                            circle5Curve1();
+                        }
+                        else if(circle4Value == "BSA"){  
+                            circle4Curve2();
+                            circle5Curve1();
+                        }
+                    }
+                    else if(circle4Value == "HSA"){
+                        if(circle5Value == "BSA"){
+                            circle4Curve2();
+                            circle5Line2(); 
+                        }
+                        else if(circle5Value == "HSA"){
+                            circle4Curve2();
+                            circle5Curve1();
+                        }
+                    }
+                    continue;
+                case 5:
+                    if(circle5Value == "BSA"){
+                        if(circle6Value == "HSA"){
+                            circle5Line1(); 
+                            circle6Curve2();
+                        }
+                        else if(circle6Value == "BSA"){  
+                            circle5Curve2();
+                            circle6Curve2();
+                        }
+                    }
+                    else if(circle5Value == "HSA"){
+                        if(circle6Value == "BSA"){
+                            circle5Curve2();
+                            circle6Line1(); 
+                        }
+                        else if(circle6Value == "HSA"){
+                            circle5Curve2();
+                            circle6Curve2();
+                        }
+                    }
+                    continue;
+                case 6:
+                    if(circle6Value == "BSA"){
+                        if(circle1Value == "HSA"){
+                            circle6Line2(); 
+                            circle1Curve2();
+                        }
+                        else if(circle1Value == "BSA"){  
+                            circle1Curve2();
+                            circle6Curve1();
+                        }
+                    }
+                    else if(circle6Value == "HSA"){
+                        if(circle1Value == "BSA"){
+                            circle6Curve1();
+                            circle1Line1(); 
+                        }
+                        else if(circle1Value == "HSA"){
+                            circle1Curve2();
+                            circle6Curve1();
+                        }
+                    }
+                    continue;
+            }
+        }
+    
+    }
+}
+
+function centerAntiHSA(a,b,c,d,e,f,g){}
+
+function centerAntiHSA_BSA(a,b,c,d,e,f,g){}
 
 function drawLines(){
     const canvas = document.getElementById("canvas");
@@ -749,6 +988,7 @@ function drawLines(){
 
     centerBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
     centerHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+    centerAntiBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
 }
     
 
@@ -761,6 +1001,17 @@ function handleResultButtonClick(e) {
 }
 
 //Line
+
+
+
+
+
+
+
+
+
+
+
 
 
 
