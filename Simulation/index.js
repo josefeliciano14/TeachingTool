@@ -70,7 +70,7 @@ center.style.top = (plate.offsetHeight/2 - center.offsetHeight/2) + "px";
 
 const platePadding = plate.offsetWidth*0.05;
 
-//Place Other Circles
+//Place Other Circles 1-6
 for(let i=0; i<6; i++){
     circles[i].style.left = (plate.offsetWidth/2 - circles[i].offsetWidth/2 + Math.cos(Math.PI*2/6*i)*(plate.offsetWidth/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
     circles[i].style.top = (plate.offsetHeight/2 - circles[i].offsetWidth/2 - Math.sin(Math.PI*2/6*i)*(plate.offsetHeight/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
@@ -276,7 +276,7 @@ for (let i = 1; i <= 6; i++) {
     circle.addEventListener("click", () => {circleClicked(i)});
 }
 
-//Draws stright line for circle 1
+//Draws reaction lines circle 1
 function circle1StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "purple";
@@ -299,7 +299,6 @@ function circle1Line2(){
     ctx.lineTo(mpC6C1_x - 15, mpC6C1_y - 20);
     ctx.stroke(); 
 }
-//Draws circle1 Bezier curve above
 function circle1Curve1(){
     ctx.beginPath();
     ctx.strokeStyle = "purple";
@@ -317,8 +316,7 @@ function circle1Curve2(){
     ctx.stroke(); 
 }
 
-
-//Draws stright line for circle 2
+//Draws reaction lines circle 2
 function circle2StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "green";
@@ -341,7 +339,6 @@ function circle2Line2(){
     ctx.lineTo(center_x + 18, (center_y - mpC2C3_y)+8);
     ctx.stroke();
 }
-//Draws line 2 with benzier curve to right
 function circle2Curve1(){
     ctx.beginPath();
     ctx.strokeStyle = "green";
@@ -350,7 +347,6 @@ function circle2Curve1(){
     ctx.lineTo(center_x + 16, (center_y - mpC2C3_y)+7);
     ctx.stroke();
 }
-//Draws line 2 with benzier curve to left
 function circle2Curve2(){
     ctx.beginPath();
     ctx.strokeStyle = "green";
@@ -361,7 +357,7 @@ function circle2Curve2(){
 }
 
 
-//Draws straight line for circle 3
+//Draws reaction lines circle 3
 function circle3StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "red";
@@ -383,7 +379,6 @@ function circle3Line2(){
     ctx.lineTo(center_x + 15, (center_y - mpC2C3_y)-2);
     ctx.stroke();
 }
-//Draws line 3 with benzier curve to right
 function circle3Curve1(){
     ctx.beginPath();
     ctx.strokeStyle = "red";
@@ -402,7 +397,7 @@ function circle3Curve2(){
 }
 
 
-//Draws stright line for circle 4
+//Draws reaction lines circle 4
 function circle4StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "yellow";
@@ -441,7 +436,7 @@ function circle4Curve2(){
     ctx.stroke();
 }
 
-//Draws stright line for circle 5
+//Draws reaction lines circle 5
 function circle5StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "blue";
@@ -481,7 +476,7 @@ function circle5Curve2(){
     ctx.stroke();
 }
 
-//Draws stright line for circle 6
+//Draws reaction lines circle 6
 function circle6StraightLine(){
     ctx.beginPath();
     ctx.strokeStyle = "orange";
@@ -1150,11 +1145,6 @@ function handleResultButtonClick(e) {
     drawLines();
 }
 
-//Line
-
-
-circle1Curve1();
-circle2Line2(); 
 
 
 
