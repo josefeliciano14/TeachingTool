@@ -1113,7 +1113,90 @@ function centerAntiHSA(a,b,c,d,e,f,g){
     }
 }
 
-function centerAntiHSA_BSA(a,b,c,d,e,f,g){}
+function centerAntiHSA_BSA(a,b,c,d,e,f,g){
+    centerValue = a;
+    circle1Value = b;
+    circle2Value = c;
+    circle3Value = d;
+    circle4Value = e; 
+    circle5Value = f;
+    circle6Value = g;
+
+    for(let i = 1; i <= 6; i++) {
+        if(centerValue == "Anti-HSA + BSA"){
+
+            switch(i) {
+                case 1:
+                    if(circle1Value == "HSA"){
+                        if(circle2Value == "BSA"){
+                            circle1Line2();
+                        }
+                        else if(circle2Value == "HSA"){ 
+                            circle1Curve1();
+                            circle2Curve1();
+                        }
+                    }
+                    continue;
+                case 2:
+                    if(circle2Value == "HSA"){
+                        if(circle3Value == "BSA"){
+                            circle2Line1();
+                        }
+                        else if(circle3Value == "HSA"){  
+                            circle2Curve2();
+                            circle3Curve1();
+                        }
+                    }
+                    continue;
+                case 3:
+                    if(circle3Value == "HSA"){
+                        if(circle4Value == "BSA"){
+                            circle3Line1();
+                        }
+                        else if(circle4Value == "HSA"){  
+                            circle3Curve2();
+                            circle4Curve1();
+                        }
+                    }
+                    continue;
+                case 4:
+                    if(circle4Value == "HSA"){
+                        if(circle5Value == "BSA"){
+                            circle4Line1();
+                        }
+                        else if(circle4Value == "HSA"){  
+                            circle4Curve2();
+                            circle5Curve1();
+                        }
+                    }
+                    continue;
+                case 5:
+                    if(circle5Value == "HSA"){
+                        if(circle6Value == "BSA"){
+                            circle5Line1();
+                        }
+                        else if(circle6Value == "HSA"){  
+                            circle5Curve2();
+                            circle6Curve2();
+                        }
+                    }
+                    continue;
+                case 6:
+                    if(circle6Value == "HSA"){
+                        if(circle1Value == "BSA"){
+                            circle6Line2();
+                        }
+                        else if(circle1Value == "HSA"){  
+                            circle1Curve2();
+                            circle6Curve1();
+                        }
+                    }
+                    continue;
+            }
+        }
+    
+    }
+}
 
 function drawLines(){
     const canvas = document.getElementById("canvas");
@@ -1134,6 +1217,7 @@ function drawLines(){
     centerHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
     centerAntiBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
     centerAntiHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+    centerAntiHSA_BSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
 }
     
 
@@ -1144,7 +1228,6 @@ resultBtn.addEventListener("click", (e) => handleResultButtonClick(e));
 function handleResultButtonClick(e) {
     drawLines();
 }
-
 
 
 
