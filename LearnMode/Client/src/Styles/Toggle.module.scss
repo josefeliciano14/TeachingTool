@@ -1,0 +1,23 @@
+.toggle{
+    display: flex;
+    background-color: var(--secondary-color);
+    width: 150px;
+    border-radius: 6px;
+    overflow: hidden;
+
+    div{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        user-select: none;
+        cursor: pointer;
+        width: 100px;
+    }
+
+    .selected{
+        background-color: var(--main-color);
+        border-radius: 6px;
+        color: white;
+    }
+}

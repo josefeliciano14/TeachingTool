@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import './Login.css';
+import './../Styles/Login.scss';
 
 function Login(){
     const [formData, setFormData] = useState({email: '', password: ''});
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("no message");
 
     const nav = useNavigate();
 
@@ -42,16 +42,14 @@ function Login(){
     
     return(
         <main>
-            <h1>Login</h1>
-
             <form className="login-register-form">
+                <h1>Login</h1>
                 <input type='text' name='email' placeholder='Email' onChange={handleChange}/>
                 <input type="password" name='password' placeholder='Password' onChange={handleChange}/>
                 <button onClick={login}>Login</button>
-                <span className="error-message">{errorMessage}</span>
+                <Link className="link" to="/register">Don't have an account? Register Here</Link>
+                <span style={{visibility:(errorMessage!="no message" ? "visible" : "hidden")}} className="error-message">{errorMessage}</span>
             </form>
-
-            <Link to="/register">Don't have an account? Register Here</Link>
         </main>
     )
 }

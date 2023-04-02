@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import './Login.css';
+import './../Styles/Login.scss';
 
 function Register(){
     const [formData, setFormData] = useState({first_name: '', last_name: '', email: '', password: ''});
 
-    const [errorMessage, setErrorMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState("no message");
 
     const nav = useNavigate();
 
@@ -42,18 +42,18 @@ function Register(){
     
     return(
         <main>
-            <h1>Register</h1>
-
             <form className="login-register-form">
+                <h1>Register</h1>
                 <input type='text' name='first_name' placeholder='First Name' onChange={handleChange}/>
                 <input type="text" name='last_name' placeholder='Last Name' onChange={handleChange}/>
                 <input type='text' name='email' placeholder='Email' onChange={handleChange}/>
                 <input type="password" name='password' placeholder='Password' onChange={handleChange}/>
                 <button onClick={register}>Register</button>
-                <span className="error-message">{errorMessage}</span>
+                <Link to="/login">Already have an account? Login here</Link>
+                <div className="error-container">
+                    <span style={{visibility:(errorMessage!="no message" ? "visible" : "hidden")}} className="error-message">{errorMessage}</span>
+                </div>
             </form>
-
-            <Link to="/login">Already have an account? Login here</Link>
         </main>
     )
 }
