@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Toggle from "../Components/Toggle";
 import Select from "../Components/Select";
 import QuestionForm from "../Components/QuestionForm";
-import AnswerForm from "../Components/AnswerForm";
 import { createModule } from "../api";
 import DynamicContentForm from "../Components/DynamicContentForm";
 
