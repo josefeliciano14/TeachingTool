@@ -81,7 +81,7 @@ function CreateModule(){
     }
 
     useEffect(() => {
-        //addContent();
+        addContent();
 
         addQuestion();
     }, []);
