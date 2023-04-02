@@ -1,17 +1,20 @@
 import {useState,useEffect} from 'react'
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate, useRoutes} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons'
+import { faCaretDown, faBars, faHome, faPuzzlePiece, faGear, faUser, faUsers } from '@fortawesome/free-solid-svg-icons'
 
 import decode from 'jwt-decode';
 
-import './Navbar.css';
+import './../Styles/Navbar.scss';
 
 function Navbar(){
 
     const [user, setUser] = useState("");
 
+    const [menuOpen, setMenuOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+    const url = window.location.pathname;
 
     const nav = useNavigate();
 
@@ -19,10 +22,10 @@ function Navbar(){
         let token = localStorage.getItem('auth');
         
         if(token){
-            setUser(decode(token).username);
+            setUser(decode(token).email);
         }
         else{
-            nav("/login");
+            nav("/");
         }
     }, []);
     
@@ -31,7 +34,11 @@ function Navbar(){
     
         setUser("");
     
-        nav("/login");
+        nav("/");
+    }
+
+    function openNavMenu(){
+        setMenuOpen(!menuOpen);
     }
 
     function openUserMenu(){
@@ -40,13 +47,45 @@ function Navbar(){
 
     return(
         <nav>
+            <div style={{visibility: menuOpen ? "visible" : "hidden"}} className='nav-menu-container'>
+                <div className='nav-menu'>
+                    <Link to="/">
+                        <div style={url === "/" ? {backgroundColor:"#2A5C2D"} : {}} className='nav-menu-item'>
+                            <FontAwesomeIcon icon={faHome}/>
+                            <span>Home</span>
+                        </div>
+                    </Link>
+                    <Link to="/modules">
+                        <div style={url === "/modules" ? {backgroundColor:"#2A5C2D"} : {}} className='nav-menu-item'>
+                            <FontAwesomeIcon icon={faPuzzlePiece}/>
+                            <span>Modules</span>
+                        </div>
+                    </Link>
+                    <Link to="/">
+                    <div className='nav-menu-item'>
+                        <FontAwesomeIcon icon={faUser}/>
+                        <span>Instructors</span>
+                    </div>
+                    </Link>
+                    <Link to="/">
+                    <div className='nav-menu-item'>
+                        <FontAwesomeIcon icon={faUsers}/>
+                        <span>Sections</span>
+                    </div>
+                    </Link>
+                    <Link to="/">
+                    <div className='nav-menu-item'>
+                        <FontAwesomeIcon icon={faGear}/>
+                        <span>Settings</span>
+                    </div>
+                    </Link>
+                </div>
+            </div>
+            <FontAwesomeIcon className='menu-icon' icon={faBars} onClick={openNavMenu}/>
             <Link to='/'><span className='logo'>LearnMode</span></Link>
             <div className='emptyspace'></div>
             <i className="fa-solid fa-bars"></i>
-            { user
-                ? <div className='user' onClick={openUserMenu}>{user} <FontAwesomeIcon icon={faCaretDown}/></div>
-                : <Link to='/login'>Login</Link> 
-            }
+            <div className='user' onClick={openUserMenu}>{user} <FontAwesomeIcon icon={faCaretDown}/></div>
             {userMenuOpen &&
                 <div className='user-menu-container'>
                     <div className='user-menu' onClick={logout}>Logout</div>

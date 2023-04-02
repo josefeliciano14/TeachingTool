@@ -1,15 +1,47 @@
 import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import fileUpload from 'express-fileupload';
 
 import userRoutes from './routes/users.js'
+import moduleRoutes from './routes/modules.js'
+import fileRoutes from './routes/files.js'
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+export const __filename = fileURLToPath(import.meta.url);
+export const __dirname = path.dirname(__filename);
+export const contentPath = path.join(__dirname, "files", "content");
+export const imagesPath = path.join(__dirname, "files", "images");
+
+//Create directories if they don't exist 
+if (!fs.existsSync(contentPath)){
+    fs.mkdirSync(contentPath);
+}
+if (!fs.existsSync(imagesPath)){
+    fs.mkdirSync(imagesPath);
+}
+if (!fs.existsSync(path.join(imagesPath, "modules"))){
+    fs.mkdirSync(path.join(imagesPath, "modules"));
+}
+if (!fs.existsSync(path.join(imagesPath, "questions"))){
+    fs.mkdirSync(path.join(imagesPath, "questions"));
+}
 
 const app = express();
 
 app.use(bodyParser.json({limit: "30mb", extended: true, }))
-app.use(bodyParser.urlencoded({limit: "30mb", extended: true, }))
+app.use(bodyParser.urlencoded({limit: "30mb", extended: true, parameterLimit: 1000000}))
+
+app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+}));
 
 app.use(cors());
 app.use('/users', userRoutes);
+app.use('/modules', moduleRoutes);
+app.use('/dynamic', fileRoutes)
 
 app.listen(5000);

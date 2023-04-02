@@ -1,0 +1,190 @@
+@mixin button(){
+    border: none;
+    width: 150px;
+    height: 35px;
+    font-weight: bold;
+    border-radius: 6px;
+    margin: 15px;
+}
+
+@mixin small-button(){
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    user-select: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.window{
+    color: black;
+    background-color: white;
+    border-radius: 6px;
+    width: 1000px;
+
+    margin: 20px 0px;
+
+    .header{
+        background-color: var(--main-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        color: white;
+        border-radius: 6px 6px 0px 0px;
+        width: 100%;
+        font-size: 25px;
+    }
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+
+        input, textarea{
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 6px;
+            padding: 6px;
+        }
+
+        .largeInput{
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            width: 100%;
+
+            textarea{
+                resize: none;
+                height: 120px;
+            }
+        }
+
+        .input{
+            display: flex;
+            margin-bottom: 20px;
+            align-items: center;
+
+            label{
+                margin-right: 20px;
+            }
+        }
+
+        .imgInput{
+            background-color: white;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+
+            input{
+                background-color: transparent;
+                margin-left: 10px;
+            }
+
+            .imgContainer{
+                border: 1px solid black;
+                width: 200px;
+                height: 200px;
+                border-radius: 6px;
+                overflow: hidden;
+
+                img{
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+        }
+
+        .fileInput{
+            margin-top: 20px;
+            
+            input{
+                background-color: transparent;
+            }
+        }
+
+        .bottom{
+            display: flex;
+            align-items: center;
+
+            label{
+                margin-right: 20px;
+            }
+
+            select{
+                min-width: 300px;
+                border: none;
+                background-color: var(--secondary-color);
+                border-radius: 6px;
+                padding: 6px;
+            }
+        }
+
+        .options{
+            color: black;
+            margin-bottom: 20px;
+        }
+        .answer{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+
+            .select{
+                @include small-button();
+                
+                background-color: var(--secondary-color);
+                color: var(--secondary-color);
+                
+                margin-right: 20px;                
+            }
+
+            .selected{
+                @include small-button();
+                
+                background-color: var(--main-color);
+                color: white;
+                
+                margin-right: 20px; 
+            }
+
+            .remove{
+                @include small-button();
+                
+                background-color: red;
+                color: white;
+
+                margin-left: 20px;
+            }
+
+            input{
+                width: 100%;
+            }
+        }
+    }
+}
+
+.buttonContainer{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.backButton{
+    @include button();
+    
+    background-color: rgb(177, 177, 177);
+    color: black;
+}
+
+.button{
+    @include button();
+
+    background-color: var(--main-color);
+    color: white;
+}

@@ -1,0 +1,14 @@
+.selected{
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    user-select: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    
+    margin-right: 20px; 
+}

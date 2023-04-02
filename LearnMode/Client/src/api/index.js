@@ -10,4 +10,7 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
-export default API;
+export const getMyModules = () => API.get('/modules');
+export const createModule = (module) => API.post('/modules', module);
+
+export const uploadDynamic = (file) => API.post('/dynamic', file);
