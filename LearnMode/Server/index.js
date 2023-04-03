@@ -3,9 +3,10 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import fileUpload from 'express-fileupload';
 
-import userRoutes from './routes/users.js'
-import moduleRoutes from './routes/modules.js'
-import fileRoutes from './routes/files.js'
+import userRoutes from './routes/users.js';
+import moduleRoutes from './routes/modules.js';
+import imageRoutes from './routes/images.js';
+import contentRoutes from './routes/content.js';
 
 import fs from 'fs';
 import path from 'path';
@@ -42,6 +43,7 @@ app.use(fileUpload({
 app.use(cors());
 app.use('/users', userRoutes);
 app.use('/modules', moduleRoutes);
-app.use('/dynamic', fileRoutes)
+app.use('/images', imageRoutes);
+app.use('/content', contentRoutes);
 
 app.listen(5000);

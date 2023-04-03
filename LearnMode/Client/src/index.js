@@ -21,7 +21,7 @@ root.render(
       <Route path="/" element={<Home/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
-      <Route path='/module/:id' element={<Module/>}/>
+      <Route path='/module/:mid' element={<Module/>}/>
       <Route path='/modules' element={<Modules/>}/>
       <Route path='/create-module' element={<CreateModule/>}/>
       <Route path="*" element={<Error/>} />

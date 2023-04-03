@@ -1,20 +1,20 @@
 import db from './../database/database.js'
-
+import fs from 'fs';
 import path from 'path';
 import { contentPath, imagesPath } from '../index.js';
 import { getFileExtension } from '../global/global.js';
 
 export const getMyModules = async (req, res) => {
     
-    const user_id = req.uid;
-        
-    //Check if user is authenticated
-    if(!user_id){
-        return res.status(401).send("Unauthenticated");
-    } 
-    
     try{
-        let sql = "SELECT mid, name FROM modules WHERE creator=? ORDER BY date_created DESC;";
+        const user_id = req.uid;
+            
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        } 
+
+        let sql = "SELECT mid, name, image FROM modules WHERE creator=? ORDER BY date_created DESC;";
         db.query(sql, [user_id], (error, result) => {
             if(error){
                 throw error;
@@ -28,8 +28,139 @@ export const getMyModules = async (req, res) => {
     }
 }
 
+export const getModuleImage = async (req, res) => {
+    try{
+        
+        const mid = req.params.mid;
+
+        let sql = "SELECT image FROM Modules WHERE mid=?;";
+        db.query(sql, [mid], (error, result) => {
+            if(error){
+                throw error;
+            }
+
+            if(result.length > 0 && result[0].image){
+                const filePath = path.join(imagesPath, "modules", result[0].image);
+        
+                if(fs.existsSync(filePath)){
+                    res.sendFile(filePath);
+                }
+                else{
+                    return res.status(404);
+                }
+            }
+            else{
+                return res.status(404);
+            }
+        });
+    }
+    catch{
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
+export const getMyModulesLimit = async (req, res) => {
+    try{
+        const num = Number(req.params.limit);
+
+        const user_id = req.uid;
+            
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        } 
+
+        let sql = "SELECT mid, name, image FROM modules WHERE creator=? ORDER BY date_created DESC LIMIT ?;";
+        db.query(sql, [user_id, num], (error, result) => {
+            if(error){
+                throw error;
+            }
+
+            return res.status(200).json(result);
+        });
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
+export const getModule = async (req, res) => {
+    try{
+        const mid = Number(req.params.mid);
+
+        const user_id = req.uid;
+            
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        } 
+
+        //Validate whether user can access this module 
+
+        let info = {};
+        let questions = [];
+        let content = [];
+
+        await new Promise((resolve, reject) => {
+            let sql = "SELECT mid, name, description FROM Modules WHERE mid=?;";
+            db.query(sql, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                if(result.length > 0){
+                    info = result[0];
+                }
+
+                resolve();
+            });
+        });
+
+        //Module not found 
+        if(!info?.mid){
+            res.status(404).json({});
+            return;
+        }
+
+        await new Promise((resolve, reject) => {
+            let sql = "SELECT eid, is_diagnostic, qid, prompt, information, image, oid, answer, O.ind FROM Questions LEFT JOIN Options O on Questions.qid = O.question LEFT JOIN Evaluations E on E.eid = Questions.evaluation WHERE module=? AND is_enabled=true ORDER BY eid, Questions.ind, O.ind ASC;";
+            db.query(sql, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                questions = result;
+
+                resolve();
+            });
+        });
+
+        await new Promise((resolve, reject) => {
+            let sql = "SELECT cid, name, description, type, data, ind FROM DynamicContent WHERE module=? ORDER BY ind ASC;";
+            db.query(sql, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                content = result;
+
+                resolve();
+            });
+        });
+
+        return res.status(200).json({
+            info: info,
+            questions: questions,
+            content: content
+        });
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
 export const createModule = async (req, res) => {
-    //try{
+    try{
         
         const module = JSON.parse(req.body.data);
 
@@ -47,15 +178,15 @@ export const createModule = async (req, res) => {
         const description = module.description ? module.description : "";
         const is_public = module.is_public ? module.is_public : false;
         const code = module.code ? module.code.trim() : "";
-        const hasImage = req?.files?.img != undefined && req?.files?.img != null;
-        const modulePayload = [name, description, user_id, is_public, code, hasImage];
+        const image = req?.files?.img ? req.files.img.name : null;
+        const modulePayload = [name, description, user_id, is_public, code, image];
 
         const evaluationEnabled = module.evaluationEnabled ? module.evaluationEnabled : false;
         const evaluationName = module.evaluationName ? module.evaluationName : "(No Name)";
         const evaluationDescription = module.evaluationDescription ? module.evaluationDescription : "";
         const is_diagnostic = module.is_diagnostic ? module.is_diagnostic : false;
 
-        db.query("INSERT INTO Modules(name, description, creator, is_public, code, hasImage) VALUES(?, ?, ?, ?, ?, ?);", modulePayload, (error, result) => {
+        db.query("INSERT INTO Modules(name, description, creator, is_public, code, image) VALUES(?, ?, ?, ?, ?, ?);", modulePayload, (error, result) => {
             if(error){
                 throw error;
             }
@@ -75,8 +206,6 @@ export const createModule = async (req, res) => {
 
                 //Filter out invalid content
                 module.content.map((c, index) => {
-                    
-                    console.log(c.type);
 
                     //No content type is specified
                     if(!c?.type){
@@ -97,6 +226,10 @@ export const createModule = async (req, res) => {
                             console.log("No html file provided");
                             return;
                         }
+                    }
+
+                    if(c?.file){
+                        delete c.file;
                     }
 
                     const contentName = c.name ? c.name : "";
@@ -148,11 +281,11 @@ export const createModule = async (req, res) => {
 
                         const prompt = question.prompt ? question.prompt : "";
                         const information = question.description ? question.description : "";
-                        const hasImage = req?.files[`q${index}`] != undefined && req?.files[`q${index}`] != null;
+                        const image = req?.files[`q${index}`]?.name ? req?.files[`q${index}`]?.name : null;
 
-                        const questionPayload = [evaluation_id, prompt, information, qIndex, hasImage];
+                        const questionPayload = [evaluation_id, prompt, information, qIndex, image];
                         
-                        db.query("INSERT INTO Questions(evaluation, prompt, information, ind, hasImage) VALUES(?, ?, ?, ?, ?);", questionPayload, (error, result) => {
+                        db.query("INSERT INTO Questions(evaluation, prompt, information, ind, image) VALUES(?, ?, ?, ?, ?);", questionPayload, (error, result) => {
                             if(error){
                                 throw error;
                             }
@@ -199,7 +332,7 @@ export const createModule = async (req, res) => {
             return res.status(201).json("Routine Added");
         });
 
-    /*}catch (error){
+    }catch (error){
         res.status(500).send("Internal Server Error");
-    }*/
+    }
 }

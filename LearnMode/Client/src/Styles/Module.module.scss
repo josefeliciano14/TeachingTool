@@ -1,0 +1,90 @@
+@mixin button(){
+    border: none;
+    width: 150px;
+    height: 35px;
+    font-weight: bold;
+    border-radius: 6px;
+    margin: 15px;
+}
+
+@mixin buttonContainer(){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    button{
+        @include button();
+        background-color: var(--main-color);
+        color: white;
+    }
+}
+
+.window{
+    color: black;
+    background-color: white;
+    border-radius: 6px;
+    width: 1000px;
+
+    margin: 20px 0px;
+
+    .header{
+        background-color: var(--main-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        color: white;
+        border-radius: 6px 6px 0px 0px;
+        width: 100%;
+        font-size: 25px;
+    }
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+        font-size: 18px;
+
+        .imgContainer{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            img{
+                width: 100%;
+                height: 350px;
+                object-fit: contain;
+            }
+        }
+
+        .options{
+
+            .option{
+                display: flex;
+                margin: 10px 0px;
+
+                span{
+                    flex: 1;
+                }
+            }
+        }
+    }
+
+    .buttonContainer{
+        @include buttonContainer();
+    }
+}
+
+.contentContainer{
+    width: 100%;
+    height: 100%;
+
+    iframe{
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.buttonContainer{
+    @include buttonContainer();
+}

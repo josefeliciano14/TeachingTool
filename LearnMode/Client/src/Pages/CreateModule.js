@@ -6,6 +6,7 @@ import Select from "../Components/Select";
 import QuestionForm from "../Components/QuestionForm";
 import { createModule } from "../api";
 import DynamicContentForm from "../Components/DynamicContentForm";
+import { useNavigate } from "react-router";
 
 function CreateModule(){
 
@@ -30,9 +31,9 @@ function CreateModule(){
     const [questionInfo, setQuestionInfo] = useState([]);
     const [count, setCount] = useState(0);
 
+    const nav = useNavigate();
+
     function sendRequest(){
-        
-        console.log(questionInfo);
         
         const formData = new FormData();
         if(moduleImgFile){
@@ -77,7 +78,10 @@ function CreateModule(){
             questions: questionInfo
         }));
         
-        createModule(formData);
+        createModule(formData)
+            .then(() => {
+                nav("/modules");
+            });
     }
 
     useEffect(() => {
@@ -169,10 +173,6 @@ function CreateModule(){
             return prev+1;
         });
     }
-
-    useEffect(() => {
-        console.log(contentInfo);
-    }, [contentInfo]);
 
     return(
         <main>

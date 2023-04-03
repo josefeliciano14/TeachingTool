@@ -1,12 +1,11 @@
 import express from 'express';
 
-import {getFile, uploadFile} from '../controllers/dynamic.js'
+import {getContent} from '../controllers/content.js'
 
 import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.get('/', getFile);
-router.post('/', uploadFile);
+router.get('/:cid', getContent);
 
 export default router;
