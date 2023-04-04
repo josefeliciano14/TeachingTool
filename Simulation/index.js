@@ -256,6 +256,13 @@ function handleResetButtonClick(e) {
     circle5Value.innerHTML = '';
     circle6Value.innerHTML = '';
 
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext('2d');
+    canvas.height = 600;
+    canvas.width = 600;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 }
 
 
