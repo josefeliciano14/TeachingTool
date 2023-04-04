@@ -219,6 +219,10 @@ for (let i = 1; i <= 6; i++) {
 const resultBtn = document.getElementById("results-btn");
 resultBtn.addEventListener("click", (e) => handleResultButtonClick(e));
 
+//Reset Button 
+const resetBtn = document.getElementById("reset-btn");
+resetBtn.addEventListener("click", (e) => handleResetButtonClick(e));
+
 function handleResultButtonClick(e) {
     const centerValue = document.getElementById('centerText').innerHTML;
     const circle1Value = document.getElementById('circle1Text').innerHTML;
@@ -233,6 +237,25 @@ function handleResultButtonClick(e) {
     centerAntiBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
     centerAntiHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
     centerAntiHSA_BSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+}
+
+function handleResetButtonClick(e) {
+    const centerValue = document.getElementById('centerText');
+    const circle1Value = document.getElementById('circle1Text');
+    const circle2Value = document.getElementById('circle2Text');
+    const circle3Value = document.getElementById('circle3Text');
+    const circle4Value = document.getElementById('circle4Text');
+    const circle5Value = document.getElementById('circle5Text');
+    const circle6Value = document.getElementById('circle6Text');
+
+    centerValue.innerHTML = '';
+    circle1Value.innerHTML = '';
+    circle2Value.innerHTML = '';
+    circle3Value.innerHTML = '';
+    circle4Value.innerHTML = '';
+    circle5Value.innerHTML = '';
+    circle6Value.innerHTML = '';
+
 }
 
 

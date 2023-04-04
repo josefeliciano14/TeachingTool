@@ -7,7 +7,7 @@ body{
     font-family: sans-serif;
 }
 
-button {
+/* button {
     background-color: #4CAF50;
     margin-left: 10%;   
     color: white; 
@@ -23,7 +23,7 @@ button {
 
 button:hover {
     background-color: #3e8e41; 
-}
+} */
 
 #plate{
     position: relative;
@@ -32,6 +32,43 @@ button:hover {
     height: 600px;
     border-radius: 50%;
 }
+
+#results-btn{
+    position: relative;
+    left: 100px;
+    background-color: #4CAF50;   
+    color: white; 
+    border: none; 
+    padding: 6px 20px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 18px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+}
+
+#results-btn:hover,#reset-btn:hover {
+    background-color: #3e8e41; 
+}
+
+#reset-btn {
+    width: 100px;
+    height: 30px;
+    position: relative;
+    top: 50px;
+    background-color: #4CAF50;  
+    color: white; 
+    border: none; 
+    padding: 6px 20px; 
+    text-align: center; 
+    text-decoration: none; 
+    display: inline-block; 
+    font-size: 18px; 
+    cursor: pointer; 
+    border-radius: 4px; 
+  }
+  
 
 .container{
     position:relative;
@@ -78,3 +115,4 @@ button:hover {
 .canvas{
     z-index: 100;
 }
+
