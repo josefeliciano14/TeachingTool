@@ -214,14 +214,10 @@ for (let i = 1; i <= 6; i++) {
     circle.addEventListener("click", () => {circleClicked(i)});
 }
 
-
 //Result Button 
 const resultBtn = document.getElementById("results-btn");
 resultBtn.addEventListener("click", (e) => handleResultButtonClick(e));
 
-//Reset Button 
-const resetBtn = document.getElementById("reset-btn");
-resetBtn.addEventListener("click", (e) => handleResetButtonClick(e));
 
 function handleResultButtonClick(e) {
     //Add bool to check if answer has been given 
@@ -232,11 +228,19 @@ function handleResultButtonClick(e) {
     const circle4Value = document.getElementById('circle4Text').innerHTML;
     const circle5Value = document.getElementById('circle5Text').innerHTML;
     const circle6Value = document.getElementById('circle6Text').innerHTML;
+    const circleValues = [circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value]
+    
+    for(let i = 0; i < 6; i++) {
+        if(circleValues[i] == ''){
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
 
     if (centerValue !== '' && circle1Value !== '' && circle2Value !== '' && circle3Value !== '' && circle4Value !== '' && circle5Value !== '' && circle6Value !== '') {
         // Clear previous lines draw on canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
+
     
     //switch statement check center value 
     switch(centerValue){
@@ -257,28 +261,6 @@ function handleResultButtonClick(e) {
             break;
     }
 }
-
-function handleResetButtonClick(e) {
-    const centerValue = document.getElementById('centerText');
-    const circle1Value = document.getElementById('circle1Text');
-    const circle2Value = document.getElementById('circle2Text');
-    const circle3Value = document.getElementById('circle3Text');
-    const circle4Value = document.getElementById('circle4Text');
-    const circle5Value = document.getElementById('circle5Text');
-    const circle6Value = document.getElementById('circle6Text');
-
-    centerValue.innerHTML = '';
-    circle1Value.innerHTML = '';
-    circle2Value.innerHTML = '';
-    circle3Value.innerHTML = '';
-    circle4Value.innerHTML = '';
-    circle5Value.innerHTML = '';
-    circle6Value.innerHTML = '';
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-}
-
 
 function drawCurves(circle){
     const val = circle; //0-5
