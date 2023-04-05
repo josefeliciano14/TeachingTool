@@ -7,24 +7,6 @@ body{
     font-family: sans-serif;
 }
 
-/* button {
-    background-color: #4CAF50;
-    margin-left: 10%;   
-    color: white; 
-    border: none; 
-    padding: 6px 20px; 
-    text-align: center; 
-    text-decoration: none; 
-    display: inline-block; 
-    font-size: 18px; 
-    cursor: pointer; 
-    border-radius: 4px; 
-}
-
-button:hover {
-    background-color: #3e8e41; 
-} */
-
 #plate{
     position: relative;
     background-color: bisque;

@@ -31,7 +31,7 @@ for(let i=1; i<=6; i++){
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
-canvas.height = 600;
+canvas.height = 600; //relative to window screen 
 canvas.width = 600;
 
 
@@ -224,6 +224,7 @@ const resetBtn = document.getElementById("reset-btn");
 resetBtn.addEventListener("click", (e) => handleResetButtonClick(e));
 
 function handleResultButtonClick(e) {
+    //Add bool to check if answer has been given 
     const centerValue = document.getElementById('centerText').innerHTML;
     const circle1Value = document.getElementById('circle1Text').innerHTML;
     const circle2Value = document.getElementById('circle2Text').innerHTML;
@@ -232,11 +233,29 @@ function handleResultButtonClick(e) {
     const circle5Value = document.getElementById('circle5Text').innerHTML;
     const circle6Value = document.getElementById('circle6Text').innerHTML;
 
-    centerBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
-    centerHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
-    centerAntiBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
-    centerAntiHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
-    centerAntiHSA_BSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+    if (centerValue !== '' && circle1Value !== '' && circle2Value !== '' && circle3Value !== '' && circle4Value !== '' && circle5Value !== '' && circle6Value !== '') {
+        // Clear previous lines draw on canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    
+    //switch statement check center value 
+    switch(centerValue){
+        case "BSA":
+            centerBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+            break; 
+        case "HSA":
+            centerHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+            break;
+        case "Anti-BSA":
+            centerAntiBSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+            break;
+        case "Anti-HSA":
+            centerAntiHSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+            break;
+        case "Anti-HSA + BSA":
+            centerAntiHSA_BSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+            break;
+    }
 }
 
 function handleResetButtonClick(e) {
@@ -256,11 +275,6 @@ function handleResetButtonClick(e) {
     circle5Value.innerHTML = '';
     circle6Value.innerHTML = '';
 
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext('2d');
-    canvas.height = 600;
-    canvas.width = 600;
-
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 }
@@ -270,8 +284,8 @@ function drawCurves(circle){
     const val = circle; //0-5
     const angle = Math.PI*(2/6)*val;
 
-    const r1 = 125; 
-    const r2 = 140; 
+    const r1 = 0.417*300; //125 relative to bigger circle 
+    const r2 = 0.467*300; //140
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -304,7 +318,7 @@ function drawLines(circle){
     const angle = Math.PI*(2/6)*val;
     const angle1 = Math.PI*(2/6)*(val+1);
 
-    const r1 = 125;  
+    const r1 = 0.417*300; //125 
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -332,8 +346,8 @@ function drawLongerLinesLeft(circle){
     const angle = Math.PI*(2/6)*val; //current circle
     const angle1 = Math.PI*(2/6)*(val+1); //next circle
 
-    const r1 = 125; 
-    const r3 = 160;  
+    const r1 = 0.417*300; //125
+    const r3 = 0.533*300; //160
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -367,8 +381,8 @@ function drawLongerLinesRight(circle){
     const angle = Math.PI*(2/6)*val; //current circle
     const angle1 = Math.PI*(2/6)*(val+1); //next circle
 
-    const r1 = 125; 
-    const r3 = 160;  
+    const r1 = 0.417*300; //125
+    const r3 = 0.533*300; //160
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
