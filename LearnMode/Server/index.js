@@ -5,6 +5,7 @@ import fileUpload from 'express-fileupload';
 
 import userRoutes from './routes/users.js';
 import moduleRoutes from './routes/modules.js';
+import sectionRoutes from './routes/sections.js';
 import imageRoutes from './routes/images.js';
 import contentRoutes from './routes/content.js';
 
@@ -43,6 +44,7 @@ app.use(fileUpload({
 app.use(cors());
 app.use('/users', userRoutes);
 app.use('/modules', moduleRoutes);
+app.use('/sections', sectionRoutes);
 app.use('/images', imageRoutes);
 app.use('/content', contentRoutes);
 

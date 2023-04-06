@@ -9,24 +9,17 @@ import './../Styles/Modules.scss';
 import './../Styles/ModulePreview.scss';
 import { useEffect, useState } from "react";
 
-import {getMyModules, getMyModulesLimit} from '../api/index.js'
+import {getMyModules, getMyModulesLimit, searchModules} from '../api/index.js'
 
 function Modules(){
     
-    const [myModules, setMyModules] = useState([]);
+    const [modules, setModules] = useState([]);
     const [viewingAll, setViewingAll] = useState(false);
+    const [query, setQuery] = useState("");
+    const [searching, setSearching] = useState(false);
 
     useEffect(() => {
-        getMyModulesLimit(5).then((res) => {
-            let list = [];
-            if(res?.data?.map){
-                res.data.map((m, index) => {
-                    list.push(<ModulePreview key={index} module={m}/>)
-                });
-
-                setMyModules(list);
-            }
-        });
+        reset();
     }, []);
 
     function viewAllModules(){
@@ -37,28 +30,66 @@ function Modules(){
                     list.push(<ModulePreview key={index} module={m}/>)
                 });
 
-                setMyModules(list);
+                setModules(list);
 
                 setViewingAll(true);
             }
         });
+    }
+
+    function search(){
+        console.log(query);
+        
+        searchModules(query)
+            .then((res) => {
+                let list = [];
+                if(res?.data?.map){
+                    res.data.map((m, index) => {
+                        list.push(<ModulePreview key={index} module={m}/>)
+                    });
+
+                    setModules(list);
+                }
+            });
+
+        setSearching(true);
+    }
+
+    function reset(){
+        
+        getMyModulesLimit(5).then((res) => {
+            let list = [];
+            if(res?.data?.map){
+                res.data.map((m, index) => {
+                    list.push(<ModulePreview key={index} module={m}/>)
+                });
+
+                setModules(list);
+            }
+        });
+
+        setSearching(false);
     }
     
     return(
         <main>
             <Navbar/>
             <div className="searchbar-container">
-                <input className="searchbar" type="text" name="search" placeholder="Search Modules..."/>
+                <input className="searchbar" type="text" name="search" placeholder="Search Modules..." value={query} onChange={(e) => setQuery(e.target.value)}/>
                 <div className="search-button">
-                    <FontAwesomeIcon className="magnifying-glass" icon={faMagnifyingGlass}/>
+                    <FontAwesomeIcon className="magnifying-glass" icon={faMagnifyingGlass} onClick={search}/>
                 </div>
             </div>
 
             <div className="window">
                 <div className="window-header">
-                    <h3>My Modules</h3>
-                    {!viewingAll &&
+                    <h3>{searching ? "Search Results" : "My Modules"}</h3>
+                    {(!viewingAll && !searching) &&
                         <a onClick={viewAllModules}>View All</a>
+                    }
+
+                    {searching &&
+                        <a onClick={reset}>Go Back</a>
                     }
                 </div>
                 <div className="window-content">
@@ -73,7 +104,7 @@ function Modules(){
                         </div>
                     </Link>
 
-                    {myModules}
+                    {modules}
                 </div>
             </div>
         </main>

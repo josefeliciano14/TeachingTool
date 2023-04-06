@@ -67,7 +67,7 @@ function Navbar(){
                         <span>Instructors</span>
                     </div>
                     </Link>
-                    <Link to="/">
+                    <Link to="/sections">
                     <div className='nav-menu-item'>
                         <FontAwesomeIcon icon={faUsers}/>
                         <span>Sections</span>
