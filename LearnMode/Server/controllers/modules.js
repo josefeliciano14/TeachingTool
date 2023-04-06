@@ -28,6 +28,25 @@ export const getMyModules = async (req, res) => {
     }
 }
 
+export const searchModules = async (req, res) => {
+    
+    try{
+        let query = `%${req.params.query}%`;
+        
+        let sql = "SELECT mid, name, image FROM modules WHERE name LIKE ? ORDER BY date_created DESC;";
+        db.query(sql, [query], (error, result) => {
+            if(error){
+                throw error;
+            }
+
+            return res.status(200).json(result);
+        });
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
 export const getModuleImage = async (req, res) => {
     try{
         
@@ -41,7 +60,7 @@ export const getModuleImage = async (req, res) => {
 
             if(result.length > 0 && result[0].image){
                 const filePath = path.join(imagesPath, "modules", result[0].image);
-        
+
                 if(fs.existsSync(filePath)){
                     res.sendFile(filePath);
                 }

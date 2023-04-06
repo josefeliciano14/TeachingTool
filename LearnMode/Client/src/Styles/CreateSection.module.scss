@@ -1,0 +1,87 @@
+@mixin button(){
+    border: none;
+    width: 150px;
+    height: 35px;
+    font-weight: bold;
+    border-radius: 6px;
+    margin: 15px;
+    background-color: var(--main-color);
+    color: white;
+}
+
+.window{
+    color: black;
+    background-color: white;
+    border-radius: 6px;
+    width: 1000px;
+
+    margin: 20px 0px;
+
+    .header{
+        background-color: var(--main-color);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+        color: white;
+        border-radius: 6px 6px 0px 0px;
+        width: 100%;
+        font-size: 25px;
+    }
+
+    .content{
+        display: flex;
+        flex-direction: column;
+        padding: 40px;
+        border: 1px solid var(--main-color);
+        border-radius: 0px 0px 6px 6px;
+
+        .input{
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        input, textarea{
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 6px;
+            padding: 6px;
+        }
+
+        select{
+            min-width: 300px;
+            border: none;
+            background-color: var(--secondary-color);
+            border-radius: 6px;
+            padding: 6px;
+        }
+
+        .error{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            p{
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .button{
+                @include button();
+            }
+        }
+
+        .buttonContainer{
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .button{
+                @include button();
+            }
+        }
+    }
+}
