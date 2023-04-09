@@ -19,6 +19,11 @@ export const getModule = (mid) => API.get(`/modules/${mid}`);
 export const searchModules = (query) => API.get(`/modules/search/${query}`);
 
 export const getSections = () => API.get('/sections');
+export const getSection = (sid) => API.get(`/sections/${sid}`);
 export const createSection = (section) => API.post(`/sections`, section);
+export const removeStudent = (uid, sid) => API.delete(`/sections/remove/${uid}/${sid}`);
+
+export const getInstructors = () => API.get('/instructors');
+export const getInstructor = (iid, sid) => API.get(`/instructors/${iid}/${sid}`);
 
 export const uploadDynamic = (file) => API.post('/dynamic', file);

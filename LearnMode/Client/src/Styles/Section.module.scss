@@ -1,0 +1,116 @@
+.charts{
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 1300px;
+    margin: 30px 0px;
+
+    .chartContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        
+        border: 2px solid var(--main-color);
+        border-radius: 6px;
+        padding: 15px 0px;
+        
+        span{
+            color: black;
+        }
+
+        .chartTitle{
+            font-weight: bold;
+            font-size: 20px;
+        }
+    }
+
+    .statsContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-width: 300px;
+        width: 33%;
+        
+        color: black;
+        border-radius: 6px;
+        padding: 15px 0px;
+        
+        .statRow{
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: space-between;
+            height: 33%;
+
+            .stat{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid var(--main-color);
+                border-radius: 6px;
+                padding: 5px;
+                width: 40%;
+                margin-bottom: 20px;
+                
+                .label{
+                    font-size: 18px;
+                    font-weight: bold;
+                }
+
+                .value{
+                    font-size: 24px;
+                    color: var(--main-color);
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}
+
+.tableContainer{
+    border: 2px solid var(--main-color);
+    border-radius: 6px;
+    padding: 20px; 
+    margin-top: 30px;
+    width: 100%;
+    max-width: 1300px;
+    
+    table{
+        color: black;
+        font-weight: bold;
+        width: 100%;
+
+        border-collapse: separate; 
+        border-spacing: 0px 5px;
+
+        thead{ 
+            background-color: var(--main-color);
+            color: white;
+
+            th{
+                text-align: center;
+            }
+        }
+
+        tbody{
+
+            td{
+                text-align: center;
+                margin-top: 10px;
+            }
+
+            .remove{
+                color: red;
+                cursor: pointer;
+            }
+        }
+    }
+}

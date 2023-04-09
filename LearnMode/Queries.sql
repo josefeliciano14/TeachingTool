@@ -22,10 +22,5 @@ CREATE TABLE Questions(qid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, evaluation I
 
 CREATE TABLE Options(oid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, question INT NOT NULL, FOREIGN KEY (question) REFERENCES Questions(qid), answer TEXT NOT NULL, is_correct boolean NOT null, ind INT);
 
-CREATE TABLE Scores(uid INT NOT NULL, FOREIGN KEY (uid) REFERENCES Users(uid), evaluation INT NOT NULL, FOREIGN KEY (evaluation) REFERENCES Evaluations(eid), score INT NOT NULL, max_score INT NOT NULL, PRIMARY KEY(uid, evaluation), is_diagnostic boolean NOT NULL);
+CREATE TABLE Scores(uid INT NOT NULL, FOREIGN KEY (uid) REFERENCES Users(uid), evaluation INT NOT NULL, FOREIGN KEY (evaluation) REFERENCES Evaluations(eid), score INT NOT NULL, max_score INT NOT NULL, PRIMARY KEY(uid, evaluation), is_diagnostic boolean NOT NULL, date_taken datetime default now());
 
-SELECT * FROM Modules
-
-DELETE FROM Sections WHERE sid=5
-
-SELECT sid, mid, sections.name as section_name, Modules.name as module_name, sections.date_created, image, Sections.code FROM sections LEFT JOIN Modules on Modules.mid = Sections.module WHERE creator=1;
