@@ -25,5 +25,8 @@ export const removeStudent = (uid, sid) => API.delete(`/sections/remove/${uid}/$
 
 export const getInstructors = () => API.get('/instructors');
 export const getInstructor = (iid, sid) => API.get(`/instructors/${iid}/${sid}`);
+export const addInstructor = (instructor) => API.post('/instructors', instructor);
+export const updatePermissions = (iid, sid, permissions) => API.put(`/instructors/${iid}/${sid}`, permissions);
+export const removeInstructor = (iid, sid) => API.delete(`/instructors/${iid}/${sid}`);
 
 export const uploadDynamic = (file) => API.post('/dynamic', file);

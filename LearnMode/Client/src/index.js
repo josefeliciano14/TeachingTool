@@ -17,6 +17,7 @@ import Error from './Pages/Error';
 import CreateSection from './Pages/CreateSection';
 import Instructors from './Pages/Instructors';
 import Instructor from './Pages/Instructor';
+import AddInstructor from './Pages/AddInstructor';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -33,6 +34,7 @@ root.render(
       <Route path='/section/:sid' element={<Section/>}/>
       <Route path='/create-section' element={<CreateSection/>}/>
       <Route path='/instructors' element={<Instructors/>}/>
+      <Route path='/add-instructor' element={<AddInstructor/>}/>
       <Route path='/instructor/:iid/:sid' element={<Instructor/>}/>
       <Route path="*" element={<Error/>} />
     </Routes>

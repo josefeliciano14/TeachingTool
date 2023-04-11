@@ -1,0 +1,85 @@
+@mixin button(){
+    border: none;
+    height: 35px;
+    font-weight: bold;
+    border-radius: 6px;
+    color: white;
+}
+
+.container{
+    margin-top: 20px;
+    overflow: hidden;
+    min-width: 600px;
+    max-width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+
+    .row{
+        display: flex;
+        width: 100%;
+
+        .label{
+            background-color: var(--main-color);
+            color: white;
+            border: 1px solid black;
+            padding: 10px;
+            width: 30%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .value{
+            background-color: white;
+            color: black;
+            border: 1px solid var(--main-color);
+            padding: 10px;
+            flex: 1;
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            select{
+                border: none;
+                background-color: var(--secondary-color);
+                border-radius: 6px;
+                padding: 6px 15px;
+            }
+
+            .permission{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 50%;
+                input{
+                    width: 50px;
+                }
+                label{
+                    flex: 1;
+                }
+            }
+
+            button{
+                @include button;
+                background-color: red;
+                width: 40px;
+            }
+        }
+    }
+}
+
+h3{
+    color: black;
+}
+
+button{
+    @include button;
+    background-color: var(--main-color);
+    width: 150px;
+}

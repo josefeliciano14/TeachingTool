@@ -83,5 +83,11 @@
                 @include button();
             }
         }
+
+        .permission{
+            label{
+                margin-left: 20px;
+            }
+        }
     }
 }
