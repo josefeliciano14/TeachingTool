@@ -14,8 +14,11 @@ API.interceptors.request.use((req) => {
 
 export const getMyModules = () => API.get('/modules');
 export const getMyModulesLimit = (limit) => API.get(`/modules/limit/${limit}`);
+export const getHomeModules = () => API.get('/modules/home');
 export const createModule = (module) => API.post('/modules', module);
 export const getModule = (mid) => API.get(`/modules/${mid}`);
+export const getEnrolledModules = () => API.get(`/modules/enrolled`);
+export const getInstructingModules = () => API.get(`/modules/instructing`);
 export const searchModules = (query) => API.get(`/modules/search/${query}`);
 
 export const getSections = () => API.get('/sections');

@@ -23,3 +23,7 @@ CREATE TABLE Questions(qid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, evaluation I
 CREATE TABLE Options(oid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, question INT NOT NULL, FOREIGN KEY (question) REFERENCES Questions(qid), answer TEXT NOT NULL, is_correct boolean NOT null, ind INT);
 
 CREATE TABLE Scores(uid INT NOT NULL, FOREIGN KEY (uid) REFERENCES Users(uid), evaluation INT NOT NULL, FOREIGN KEY (evaluation) REFERENCES Evaluations(eid), score INT NOT NULL, max_score INT NOT NULL, PRIMARY KEY(uid, evaluation), is_diagnostic boolean NOT NULL, date_taken datetime default now());
+
+SELECT mid, M.name, image FROM Instructs LEFT JOIN Sections S on Instructs.sid = S.sid LEFT JOIN Modules M on M.mid = S.module LEFT JOIN Instructors I on Instructs.iid = I.iid WHERE I.uid=1 ORDER BY M.date_created DESC
+
+UPDATE Modules SET description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' WHERE mid=30

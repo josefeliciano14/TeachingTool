@@ -25,8 +25,6 @@ function Module(){
         .then((res) => {
             setData(res.data);
         });
-
-        //<iframe style={{width: "100%", height: "100%"}} src="http://localhost:5000/dynamic"/>
     }, []);
 
     useEffect(() => {

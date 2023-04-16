@@ -12,9 +12,9 @@ export const getMyModules = async (req, res) => {
         //Check if user is authenticated
         if(!user_id){
             return res.status(401).send("Unauthenticated");
-        } 
+        }
 
-        let sql = "SELECT mid, name, image FROM modules WHERE creator=? ORDER BY date_created DESC;";
+        let sql = "SELECT mid, name, description, image FROM modules WHERE creator=? ORDER BY date_created DESC;";
         db.query(sql, [user_id], (error, result) => {
             if(error){
                 throw error;
@@ -28,12 +28,121 @@ export const getMyModules = async (req, res) => {
     }
 }
 
+export const getEnrolledModules = async (req, res) => {
+    
+    try{
+        const user_id = req.uid;
+            
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        }
+
+        let sql = "SELECT mid, Modules.name, Modules.description, image FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Enrollments E on S.sid = E.sid WHERE E.uid=? ORDER BY enrollment_date DESC;";
+        db.query(sql, [user_id], (error, result) => {
+            if(error){
+                throw error;
+            }
+
+            return res.status(200).json(result);
+        });
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
+export const getInstructingModules = async (req, res) => {
+    try{
+        const user_id = req.uid;
+            
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        }
+
+        let sql = "SELECT mid, M.name, M.description, image FROM Instructs LEFT JOIN Sections S on Instructs.sid = S.sid LEFT JOIN Modules M on M.mid = S.module LEFT JOIN Instructors I on Instructs.iid = I.iid WHERE I.uid=? ORDER BY M.date_created DESC;";
+        db.query(sql, [user_id], (error, result) => {
+            if(error){
+                throw error;
+            }
+
+            return res.status(200).json(result);
+        });
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
+export const getHomeModules = async (req, res) => {
+    
+    try{
+        const user_id = req.uid;
+            
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        } 
+
+        let modules = {
+            myModules: [],
+            enrolled: [],
+            instructing: []
+        }
+
+        let sql1 = "SELECT mid, name, description, image FROM modules WHERE creator=? ORDER BY date_created DESC LIMIT 5;";
+        await new Promise((resolve, reject) => {
+            db.query(sql1, [user_id], (error, result) => {
+                if(error){
+                    throw error;
+                }
+    
+                modules.created = result;
+
+                resolve();
+            }); 
+        });
+
+        let sql2 = "SELECT mid, Modules.name, Modules.description, image FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Enrollments E on S.sid = E.sid WHERE E.uid=? ORDER BY enrollment_date DESC LIMIT 5;"
+        await new Promise((resolve, reject) => {
+            db.query(sql2, [user_id], (error, result) => {
+                if(error){
+                    throw error;
+                }
+    
+                modules.enrolled = result;
+
+                resolve();
+            });
+        });
+
+        let sql3 = "SELECT mid, M.name, M.description, image FROM Instructs LEFT JOIN Sections S on Instructs.sid = S.sid LEFT JOIN Modules M on M.mid = S.module LEFT JOIN Instructors I on Instructs.iid = I.iid WHERE I.uid=? ORDER BY M.date_created DESC LIMIT 6;"
+        await new Promise((resolve, reject) => {
+            db.query(sql3, [user_id], (error, result) => {
+                if(error){
+                    throw error;
+                }
+    
+                modules.instructing = result;
+
+                resolve();
+            });
+        });
+
+        return res.status(200).json(modules);
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
 export const searchModules = async (req, res) => {
     
     try{
         let query = `%${req.params.query}%`;
         
-        let sql = "SELECT mid, name, image FROM modules WHERE name LIKE ? ORDER BY date_created DESC;";
+        let sql = "SELECT mid, name, description, image FROM modules WHERE name LIKE ? ORDER BY date_created DESC;";
         db.query(sql, [query], (error, result) => {
             if(error){
                 throw error;

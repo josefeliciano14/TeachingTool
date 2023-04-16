@@ -25,7 +25,7 @@ function Navbar(){
             setUser(decode(token).email);
         }
         else{
-            nav("/");
+            nav("/login");
         }
     }, []);
     
@@ -51,12 +51,6 @@ function Navbar(){
                 <div className='nav-menu'>
                     <Link to="/">
                         <div style={url === "/" ? {backgroundColor:"#2A5C2D"} : {}} className='nav-menu-item'>
-                            <FontAwesomeIcon icon={faHome}/>
-                            <span>Home</span>
-                        </div>
-                    </Link>
-                    <Link to="/modules">
-                        <div style={url === "/modules" ? {backgroundColor:"#2A5C2D"} : {}} className='nav-menu-item'>
                             <FontAwesomeIcon icon={faPuzzlePiece}/>
                             <span>Modules</span>
                         </div>
