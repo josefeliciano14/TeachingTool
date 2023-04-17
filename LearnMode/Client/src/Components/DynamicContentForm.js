@@ -3,20 +3,42 @@ import styles from '../Styles/CreateModule.module.scss'
 
 function DynamicContentForm({index, setContentInfo}){
     const [type, setType] = useState("");
-    const [data, setData] = useState({});
-    const [file, setFile] = useState();
     
     const typeOptions = [
-        "Dynamic Image", "Custom"
+        "Text", "Image", "Dynamic Image", "Webpage", "Custom"
     ]
 
     useEffect(() => {
         setType(typeOptions[0]);
     }, []);
 
-    function updateContentInfo(field, value){
+    useEffect(() => {
         setContentInfo((prev) => {
-            prev[index][field]=value;
+            prev[index].type = type;
+
+            if(type === "Text" || type === "Image"){
+                prev[index].data = {text: ""};
+            }
+            else if(type === "Webpage"){
+                prev[index].data = {link: ""};
+            }
+
+            prev[index].file = {};
+            
+            return prev;
+        });
+    }, [type]);
+
+    function updateContentInfo(field, value, inData){
+        setContentInfo((prev) => {
+            console.log(prev);
+
+            if(inData){
+                prev[index].data[field]=value;
+            }
+            else{
+                prev[index][field]=value;
+            }
             
             return prev;
         });
@@ -25,8 +47,6 @@ function DynamicContentForm({index, setContentInfo}){
     function handleFileChange(e){
         if(e?.target?.files[0]){
             const file = e.target.files[0];
-
-            setFile(file);
 
             updateContentInfo("file", file);
         }
@@ -54,6 +74,9 @@ function DynamicContentForm({index, setContentInfo}){
                         })}
                     </select>
                 </div>
+                {type === "Text" && 
+                    <input type="text" onChange={(e) => {updateContentInfo("text", e.target.value, true)}}/>
+                }
                 {type === "Custom" &&
                     <div className={styles.fileInput}>
                         <input type="file" onChange={(e) => {handleFileChange(e)}}/>
