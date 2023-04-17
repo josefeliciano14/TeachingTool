@@ -26,4 +26,11 @@ CREATE TABLE Scores(uid INT NOT NULL, FOREIGN KEY (uid) REFERENCES Users(uid), e
 
 SELECT mid, M.name, image FROM Instructs LEFT JOIN Sections S on Instructs.sid = S.sid LEFT JOIN Modules M on M.mid = S.module LEFT JOIN Instructors I on Instructs.iid = I.iid WHERE I.uid=1 ORDER BY M.date_created DESC
 
-UPDATE Modules SET description='Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.' WHERE mid=30
+SELECT uid FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Enrollments E on S.sid = E.sid WHERE mid=31 AND E.uid=1 AND S.sid=1
+
+SELECT mid, name, description, is_public FROM Modules WHERE mid=31;
+
+UPDATE Modules SET is_public=false WHERE mid=31
+
+SELECT * FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Instructs I on S.sid = I.sid LEFT JOIN Instructors I2 on I.iid = I2.iid WHERE Modules.mid=31 AND I2.uid=1
+

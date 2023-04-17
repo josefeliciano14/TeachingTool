@@ -17,6 +17,8 @@ export const getMyModulesLimit = (limit) => API.get(`/modules/limit/${limit}`);
 export const getHomeModules = () => API.get('/modules/home');
 export const createModule = (module) => API.post('/modules', module);
 export const getModule = (mid) => API.get(`/modules/${mid}`);
+export const getModuleSection = (mid, sid) => API.get(`/modules/${mid}/section/${sid}`);
+export const getModuleWithCode = (mid, code) => API.get(`/modules/${mid}?code=${code}`);
 export const getEnrolledModules = () => API.get(`/modules/enrolled`);
 export const getInstructingModules = () => API.get(`/modules/instructing`);
 export const searchModules = (query) => API.get(`/modules/search/${query}`);
