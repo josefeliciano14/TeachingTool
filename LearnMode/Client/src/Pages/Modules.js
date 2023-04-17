@@ -29,24 +29,19 @@ function Modules(){
     useEffect(() => {
         getHomeModules()
             .then((res) => {
-                
-
                 setCreated(compileModules(res?.data?.created, "created"));
                 setEnrolled(compileModules(res?.data?.enrolled, "enrolled"));
                 setInstructing(compileModules(res?.data?.instructing, "instructing"));
 
-                let selection = "created";
-
-                if(res?.data?.created?.length === 0){
-                    if(res?.data?.enrolled?.length > 0){
-                        selection = "enrolled";
-                    }
-                    else if(res?.data?.instructing?.length > 0){
-                        selection = "instructing";
-                    }
+                if(res?.data?.created?.length > 0){
+                    setShowing("created");
                 }
-
-                setShowing(selection);
+                else if(res?.data?.enrolled?.length > 0){
+                    setShowing("enrolled");
+                }
+                else if(res?.data?.instructing?.length > 0){
+                    setShowing("instructing");
+                }
             });
     }, []);
 
@@ -230,7 +225,7 @@ function Modules(){
                             }
                             {(current.type === "enrolled" || current.type === "searched") && 
                                 <>
-                                    <button onClick={() => {nav(`/module/${current.mid}`)}}>Start</button>
+                                    <button onClick={() => {nav(`/module/${current.mid}/section/${current.sid}`)}}>Start</button>
                                 </>
                             }
                         </div>

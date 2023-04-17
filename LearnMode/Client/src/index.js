@@ -26,7 +26,8 @@ root.render(
       <Route path='/' element={<Modules/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
-      <Route path='/module/:mid' element={<Module/>}/>
+      <Route path='/module/:mid' element={<Module submitOnCompletion={false}/>}/>
+      <Route path='/module/:mid/section/:sid' element={<Module submitOnCompletion={true}/>}/>
       <Route path='/create-module' element={<CreateModule/>}/>
       <Route path='/sections' element={<Sections/>}/>
       <Route path='/section/:sid' element={<Section/>}/>

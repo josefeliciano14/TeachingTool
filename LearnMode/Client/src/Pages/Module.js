@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import Navbar from "../Components/Navbar";
-import {BASE_URL, getModule} from '../api/index.js';
+import {BASE_URL, getModule, getModuleSection, getModuleWithCode} from '../api/index.js';
 import styles from '../Styles/Module.module.scss';
 import Question from "../Components/Module/Question";
+import { API } from "../api/index.js";
 
-function Module(){
+function Module({submitOnCompletion}){
     
-    const {mid} = useParams();
+    const {mid, sid} = useParams();
     const [data, setData] = useState({});
     const [sequence, setSequence] = useState(["Intro"]);
     const [state, setState] = useState(0);
@@ -15,21 +16,43 @@ function Module(){
     const [questions, setQuestions] = useState([]); 
     const [questionInfo, setQuestionInfo] = useState({});
     const [diagnosticAnswers, setDiagnosticAnswers] = useState({});
+    const [needCode, setNeedCode] = useState(false);
+    const [incorrectCode, setIncorrectCode] = useState(false);
+    const [code, setCode] = useState("");
 
     const [payload, setPayload] = useState({});
 
     const nav = useNavigate();
 
     useEffect(() => {
-        getModule(mid)
-        .then((res) => {
-            setData(res.data);
-        });
+        
+        if(sid){
+            getModuleSection(mid, sid)
+            .then((res) => {
+                console.log(res.data);
+
+                setData(res.data);
+            });
+        }
+        else{
+            getModule(mid)
+            .then((res) => {
+                console.log(res);
+                
+                setData(res.data);
+            })
+            .catch((err) => {
+                const error_code = err?.response?.status;
+                const message = err?.response?.data?.message;
+
+                if(error_code === 403 && message === "enter code"){
+                    setNeedCode(true);
+                }
+            });
+        }
     }, []);
 
     useEffect(() => {
-        console.log(data);
-        
         let s = ["Intro"];
         let p = {};
         
@@ -195,16 +218,57 @@ function Module(){
             console.log(payload);
         }
 
+        //Make sure to validate 
+        /*if(submitOnCompletion && data.role != "instructor" && data.role != "creator"){
+
+        }*/
+
         console.log(questionInfo);
 
         nextSection();
+    }
+
+    function enterCode(){
+        setIncorrectCode(false);
+
+        getModuleWithCode(mid, code)
+        .then((res) => {
+            console.log(res);
+            
+            setData(res.data);
+
+            setNeedCode(false);
+        })
+        .catch((err) => {
+            setIncorrectCode(true);
+        });
     }
     
     return(
         <main>
             <Navbar/>
 
-            {data &&
+            {needCode &&
+                <div className={styles.window}>
+                    <div className={styles.header}>
+                        Enter code to proceed to module
+                    </div>
+                    <div className={styles.content}>
+                        
+                        {incorrectCode &&
+                            <span>Incorrect Code. Try Again.</span>
+                        }
+
+                        <input className={styles.codeInput} type="text" value={code} onChange={(e) => {setCode(e.target.value)}}/>
+
+                        <div className={styles.buttonContainer}>
+                            <button onClick={enterCode}>Enter</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            {data?.info &&
                 <>
                     {sequence[state] === "Intro" &&
                         <div className={styles.window}>
@@ -226,7 +290,7 @@ function Module(){
                             {questions}
 
                             <div className={styles.buttonContainer}>
-                                <button onClick={submitEvaluation}>Submit</button>
+                                <button onClick={() => {submitEvaluation()}}>Submit</button>
                             </div>
                         </>
                     }
@@ -241,6 +305,21 @@ function Module(){
 
                             <div className={styles.buttonContainer}>
                                 <button onClick={nextSection}>Next</button>
+                            </div>
+                        </>
+                    }
+
+                    {(!sequence[state] && !needCode) &&
+                        <>
+                            <div className={styles.window}>
+                                <div className={styles.header}>
+                                    End of Module
+                                </div>
+                                <div className={styles.content}>
+                                    <div className={styles.buttonContainer}>
+                                        <button onClick={() => nav("/")}>Exit</button>
+                                    </div>
+                                </div>
                             </div>
                         </>
                     }

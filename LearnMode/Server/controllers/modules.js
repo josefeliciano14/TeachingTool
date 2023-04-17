@@ -91,6 +91,7 @@ export const getHomeModules = async (req, res) => {
             instructing: []
         }
 
+        //Created
         let sql1 = "SELECT mid, name, description, image FROM modules WHERE creator=? ORDER BY date_created DESC LIMIT 5;";
         await new Promise((resolve, reject) => {
             db.query(sql1, [user_id], (error, result) => {
@@ -104,7 +105,8 @@ export const getHomeModules = async (req, res) => {
             }); 
         });
 
-        let sql2 = "SELECT mid, Modules.name, Modules.description, image FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Enrollments E on S.sid = E.sid WHERE E.uid=? ORDER BY enrollment_date DESC LIMIT 5;"
+        //Enrolled
+        let sql2 = "SELECT mid, Modules.name, Modules.description, image, S.sid as sid FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Enrollments E on S.sid = E.sid WHERE E.uid=? ORDER BY enrollment_date DESC LIMIT 5;"
         await new Promise((resolve, reject) => {
             db.query(sql2, [user_id], (error, result) => {
                 if(error){
@@ -117,6 +119,7 @@ export const getHomeModules = async (req, res) => {
             });
         });
 
+        //Instructing 
         let sql3 = "SELECT mid, M.name, M.description, image FROM Instructs LEFT JOIN Sections S on Instructs.sid = S.sid LEFT JOIN Modules M on M.mid = S.module LEFT JOIN Instructors I on Instructs.iid = I.iid WHERE I.uid=? ORDER BY M.date_created DESC LIMIT 6;"
         await new Promise((resolve, reject) => {
             db.query(sql3, [user_id], (error, result) => {
@@ -217,20 +220,21 @@ export const getModule = async (req, res) => {
         const mid = Number(req.params.mid);
 
         const user_id = req.uid;
+
+        const code = req?.query?.code;
             
         //Check if user is authenticated
         if(!user_id){
             return res.status(401).send("Unauthenticated");
         } 
 
-        //Validate whether user can access this module 
-
+        let role = {};
         let info = {};
         let questions = [];
         let content = [];
 
         await new Promise((resolve, reject) => {
-            let sql = "SELECT mid, name, description FROM Modules WHERE mid=?;";
+            let sql = "SELECT mid, name, description, creator, is_public, code FROM Modules WHERE mid=?;";
             db.query(sql, [mid], (error, result) => {
                 if(error){
                     throw error;
@@ -248,6 +252,168 @@ export const getModule = async (req, res) => {
         if(!info?.mid){
             res.status(404).json({});
             return;
+        }
+
+        //Obtain user role 
+        //A user can enter a module if they have created it, they are instructing it or if it is public
+        if(info.creator === user_id){
+            role = "creator";
+        }
+        else{
+            await new Promise((resolve, reject) => {
+                let sql = "SELECT * FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Instructs I on S.sid = I.sid LEFT JOIN Instructors I2 on I.iid = I2.iid WHERE Modules.mid=? AND I2.uid=?;";
+                db.query(sql, [mid, user_id], (error, result) => {
+                    if(error){
+                        throw error;
+                    }
+    
+                    if(result.length > 0){
+                        role = "instructor";
+                    }
+                    else{
+                        role = "student";
+                    }
+    
+                    resolve();
+                });
+            });
+        }
+        delete info.creator;
+
+        //The only users allowed to enter a private module are the creator, an instructor or a user that provided the correct code 
+        if(!info.is_public && (role != "creator" && role != "instructor") && code != info.code){
+            if(info.code){
+                res.status(403).json({message: "enter code"});
+                return;
+            }
+            else{
+                res.status(403).json({});
+                return;
+            }
+        }
+
+        //Only get the questions if it is a creator or instructor previewing the module 
+        //Evaluations are only for modules in the context of a section 
+        if(role === "creator" || role === "instructor"){
+            await new Promise((resolve, reject) => {
+                let sql = "SELECT eid, is_diagnostic, qid, prompt, information, image, oid, answer, O.ind FROM Questions LEFT JOIN Options O on Questions.qid = O.question LEFT JOIN Evaluations E on E.eid = Questions.evaluation WHERE module=? AND is_enabled=true ORDER BY eid, Questions.ind, O.ind ASC;";
+                db.query(sql, [mid], (error, result) => {
+                    if(error){
+                        throw error;
+                    }
+    
+                    questions = result;
+    
+                    resolve();
+                });
+            });
+        }
+
+        await new Promise((resolve, reject) => {
+            let sql = "SELECT cid, name, description, type, data, ind FROM DynamicContent WHERE module=? ORDER BY ind ASC;";
+            db.query(sql, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                content = result;
+
+                resolve();
+            });
+        });
+
+        return res.status(200).json({
+            role: role,
+            info: info,
+            questions: questions,
+            content: content
+        });
+    }
+    catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
+export const getModuleSection = async (req, res) => {
+    try{
+        const mid = Number(req.params.mid);
+
+        const user_id = req.uid;
+        const sid = req.sid;
+            
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        } 
+
+        let role = {};
+        let info = {};
+        let questions = [];
+        let content = [];
+
+        await new Promise((resolve, reject) => {
+            let sql = "SELECT mid, name, description, creator FROM Modules WHERE mid=?;";
+            db.query(sql, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                if(result.length > 0){
+                    info = result[0];
+                }
+
+                resolve();
+            });
+        });
+
+        //Module not found 
+        if(!info?.mid){
+            res.status(404).json({});
+            return;
+        }
+
+        //Obtain user role 
+        if(info.creator === user_id){
+            role = "creator";
+        }
+        else{
+            await new Promise((resolve, reject) => {
+                let sql = "SELECT * FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Instructs I on S.sid = I.sid LEFT JOIN Instructors I2 on I.iid = I2.iid WHERE Modules.mid=? AND I2.uid=?;";
+                db.query(sql, [mid, user_id], (error, result) => {
+                    if(error){
+                        throw error;
+                    }
+    
+                    if(result.length > 0){
+                        role = "instructor";
+                    }
+                    else{
+                        role = "student";
+                    }
+    
+                    resolve();
+                });
+            });
+        }
+        delete info.creator;
+
+        //If the user is neither the creator nor the instructor, check to make sure they are in the section. Otherwise, reject the request. 
+        if(role != "creator" && role != "instructor"){
+            await new Promise((resolve, reject) => {
+                let sql = "SELECT uid FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Enrollments E on S.sid = E.sid WHERE mid=? AND E.uid=? AND S.sid=?;";
+                db.query(sql, [mid, user_id, sid], (error, result) => {
+                    if(error){
+                        throw error;
+                    }
+    
+                    if(result.length === 0){
+                        res.status(403).json({});
+                        return;
+                    }
+    
+                    resolve();
+                });
+            });
         }
 
         await new Promise((resolve, reject) => {
@@ -277,6 +443,7 @@ export const getModule = async (req, res) => {
         });
 
         return res.status(200).json({
+            role: role,
             info: info,
             questions: questions,
             content: content
