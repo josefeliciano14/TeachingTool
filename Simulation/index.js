@@ -12,6 +12,7 @@ for(let i=1; i<=6; i++){
 const centerMenu = document.getElementById("centerMenu");
 centerMenu.style.visibility = "hidden";
 
+
 //Hide circleMenu 1-6 
 for(let i=1; i<=6; i++){
     const circleMenu = document.getElementById("circle" + i + "Menu");
@@ -31,30 +32,33 @@ for(let i=1; i<=6; i++){
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
-canvas.height = 600; //relative to window screen 
-canvas.width = 600;
+canvas.height = window.innerHeight *  0.717; //relative to window screen org val 600 
+canvas.width = window.innerWidth * 0.353;
 
 
-//Resize Circles 
-center.style.width = (plate.offsetWidth * relativeSize) + "px";
-center.style.height = (plate.offsetHeight * relativeSize) + "px";
-for(let i=0; i<circles.length; i++){
-    circles[i].style.width = (plate.offsetWidth * relativeSize) + "px";
-    circles[i].style.height = (plate.offsetHeight * relativeSize) + "px";
+function resizeCircles(){
+    const relativeSize = 0.2;
+    center.style.width = (plate.offsetWidth * relativeSize) + "px"; 
+    center.style.height = (plate.offsetHeight * relativeSize) + "px";   
+    for(let i=0; i<circles.length; i++){
+        circles[i].style.width = (plate.offsetWidth * relativeSize) + "px";
+        circles[i].style.height = (plate.offsetHeight * relativeSize) + "px";
+    }
 }
 
-//Place Center Circle 
-center.style.left = (plate.offsetWidth/2 - center.offsetWidth/2) + "px";
-center.style.top = (plate.offsetHeight/2 - center.offsetHeight/2) + "px";
+function placeCircles(){
+    //Place Center Circle 
+    center.style.left = (plate.offsetWidth/2 - center.offsetWidth/2) + "px";
+    center.style.top = (plate.offsetHeight/2 - center.offsetHeight/2) + "px";
 
-const platePadding = plate.offsetWidth*0.05;
+    const platePadding = plate.offsetWidth*0.05;
 
-//Place Other Circles 1-6
-for(let i=0; i<6; i++){
-    circles[i].style.left = (plate.offsetWidth/2 - circles[i].offsetWidth/2 + Math.cos(Math.PI*2/6*i)*(plate.offsetWidth/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
-    circles[i].style.top = (plate.offsetHeight/2 - circles[i].offsetWidth/2 - Math.sin(Math.PI*2/6*i)*(plate.offsetHeight/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
+    //Place Other Circles 1-6
+    for(let i=0; i<6; i++){
+        circles[i].style.left = (plate.offsetWidth/2 - circles[i].offsetWidth/2 + Math.cos(Math.PI*2/6*i)*(plate.offsetWidth/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
+        circles[i].style.top = (plate.offsetHeight/2 - circles[i].offsetWidth/2 - Math.sin(Math.PI*2/6*i)*(plate.offsetHeight/2 - circles[i].offsetWidth/2 - platePadding)) + "px";
+    }
 }
-
 
 function placeText(e){
     const eventID = e.target.offsetParent.id;
@@ -130,10 +134,6 @@ function menuClicked(e){
             circle4Text.innerHTML = e.target.innerHTML;
             placeText(e);
             break;
-        case "circle4Menu":
-            circle4Text.innerHTML = e.target.innerHTML;
-            placeText(e);
-            break;
         case "circle5Menu":
             circle5Text.innerHTML = e.target.innerHTML;
             placeText(e);
@@ -145,6 +145,18 @@ function menuClicked(e){
     }
                
 }
+
+function handleResize() {
+    placeText({ target: { offsetParent: { id: "centerMenu" } } });
+    placeText({ target: { offsetParent: { id: "circle1Menu" } } });
+    placeText({ target: { offsetParent: { id: "circle2Menu" } } });
+    placeText({ target: { offsetParent: { id: "circle3Menu" } } });
+    placeText({ target: { offsetParent: { id: "circle4Menu" } } });
+    placeText({ target: { offsetParent: { id: "circle5Menu" } } });
+    placeText({ target: { offsetParent: { id: "circle6Menu" } } });
+
+}
+
 
 function circleClicked(i){
     switch (i){
@@ -219,8 +231,7 @@ const resultBtn = document.getElementById("results-btn");
 resultBtn.addEventListener("click", (e) => handleResultButtonClick(e));
 
 
-function handleResultButtonClick(e) {
-    //Add bool to check if answer has been given 
+function handleResultButtonClick(e) { 
     const centerValue = document.getElementById('centerText').innerHTML;
     const circle1Value = document.getElementById('circle1Text').innerHTML;
     const circle2Value = document.getElementById('circle2Text').innerHTML;
@@ -266,8 +277,8 @@ function drawCurves(circle){
     const val = circle; //0-5
     const angle = Math.PI*(2/6)*val;
 
-    const r1 = 0.417*300; //125 relative to bigger circle 
-    const r2 = 0.467*300; //140
+    const r1 = 0.417*(plate.offsetWidth / 2); //125 relative to bigger circle *300 
+    const r2 = 0.467*(plate.offsetWidth / 2); //140
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -300,7 +311,7 @@ function drawLines(circle){
     const angle = Math.PI*(2/6)*val;
     const angle1 = Math.PI*(2/6)*(val+1);
 
-    const r1 = 0.417*300; //125 
+    const r1 = 0.417*(plate.offsetWidth / 2); //125 
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -328,8 +339,8 @@ function drawLongerLinesLeft(circle){
     const angle = Math.PI*(2/6)*val; //current circle
     const angle1 = Math.PI*(2/6)*(val+1); //next circle
 
-    const r1 = 0.417*300; //125
-    const r3 = 0.533*300; //160
+    const r1 = 0.417**(plate.offsetWidth / 2); //125
+    const r3 = 0.533**(plate.offsetWidth / 2); //160
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -363,8 +374,8 @@ function drawLongerLinesRight(circle){
     const angle = Math.PI*(2/6)*val; //current circle
     const angle1 = Math.PI*(2/6)*(val+1); //next circle
 
-    const r1 = 0.417*300; //125
-    const r3 = 0.533*300; //160
+    const r1 = 0.417*(plate.offsetWidth / 2); //125
+    const r3 = 0.533*(plate.offsetWidth / 2); //160
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -743,3 +754,36 @@ function centerAntiHSA_BSA(a,b,c,d,e,f,g){
     }
 }
 
+//responsiveness
+function resizeMenus(){
+    centerMenu.style.width = "120%"; 
+    centerMenu.style.height = "auto"; 
+    const fontSizeWidth = centerMenu.offsetWidth * 0.15; 
+    const fontSizeHeight = centerMenu.offsetHeight * 0.16; 
+    const fontSize = Math.min(fontSizeWidth, fontSizeHeight, 16); 
+    centerMenu.style.fontSize = fontSize + 'px';
+
+    for(let i=1; i<=6; i++){
+        const circleMenu = document.getElementById("circle" + i + "Menu");
+        circleMenu.style.width = "120%"; 
+        circleMenu.style.height = "auto";
+
+        const fontSizeWidth = circleMenu.offsetWidth * 0.15; 
+        const fontSizeHeight = circleMenu.offsetHeight * 0.16; 
+        const fontSize = Math.min(fontSizeWidth, fontSizeHeight, 16); 
+        circleMenu.style.fontSize = fontSize + 'px';
+    }
+}
+
+resizeCircles();
+placeCircles();
+
+window.addEventListener('resize', menuClicked);
+
+window.addEventListener('resize', function() {
+    resizeCircles();
+    placeCircles();
+    handleResize();
+    handleResultButtonClick();
+    resizeMenus();
+});
