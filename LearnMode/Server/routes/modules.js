@@ -1,6 +1,6 @@
 import express from 'express';
 
-import {getMyModules, createModule, getModuleImage, getMyModulesLimit, getModule, searchModules, getHomeModules, getEnrolledModules, getInstructingModules, getModuleSection} from '../controllers/modules.js'
+import {getMyModules, createModule, getModuleImage, getMyModulesLimit, getModule, searchModules, getHomeModules, getEnrolledModules, getInstructingModules, getModuleSection, deleteModule} from '../controllers/modules.js'
 
 import auth from '../middleware/auth.js';
 
@@ -12,6 +12,7 @@ router.get('/enrolled', auth, getEnrolledModules);
 router.get('/instructing', auth, getInstructingModules);
 router.get('/limit/:limit', auth, getMyModulesLimit);
 router.get('/:mid', auth, getModule);
+router.delete('/:mid', auth, deleteModule);
 router.get('/:mid/section/:sid', auth, getModuleSection);
 router.post('/', auth, createModule);
 router.get('/search/:query', searchModules);

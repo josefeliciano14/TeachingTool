@@ -165,6 +165,59 @@
                 width: 100%;
             }
         }
+
+        .typeOptions{
+            margin-top: 20px;
+            width: 100%;
+
+            input[type=text]{
+                width: 100%;
+            }
+
+            .dynamicImageInput{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                input{
+                    background-color: white;
+                }
+            }
+
+            .dynamicImageContainer{
+                border: 1px solid black;
+                border-radius: 6px;
+
+                img{
+                    width: 100%;
+                    max-height: 80vh;
+                    object-fit: contain;
+                }
+
+                .dotsContainer{
+                    width: 0px;
+                    height: 0px;
+
+                    .dotContainer{
+                        width: 0px;
+                        height: 0px;
+                        position: relative;
+
+                        .dot{
+                            width: 30px;
+                            height: 30px;
+                            border-radius: 50%;
+                            background-color: blue;
+                            cursor: pointer;
+                        }
+
+                        .dotText{
+                            min-width: 100px;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

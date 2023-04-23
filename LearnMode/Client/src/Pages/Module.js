@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import Navbar from "../Components/Navbar";
 import {BASE_URL, getModule, getModuleSection, getModuleWithCode} from '../api/index.js';
 import styles from '../Styles/Module.module.scss';
 import Question from "../Components/Module/Question";
 import { API } from "../api/index.js";
+import Dot from "../Components/Dot";
 
 function Module({submitOnCompletion}){
     
@@ -19,8 +20,11 @@ function Module({submitOnCompletion}){
     const [needCode, setNeedCode] = useState(false);
     const [incorrectCode, setIncorrectCode] = useState(false);
     const [code, setCode] = useState("");
+    const [dots, setDots] = useState([]);
 
     const [payload, setPayload] = useState({});
+
+    const ref = useRef();
 
     const nav = useNavigate();
 
@@ -243,6 +247,16 @@ function Module({submitOnCompletion}){
             setIncorrectCode(true);
         });
     }
+
+    function loadedImage(){
+        if(sequence[state] === "Content" && data?.content[cIndex]?.type === "Dynamic Image"){
+            setDots(
+                data?.content[cIndex]?.data?.dots?.map((dot, index) => {
+                    return <Dot key={index} x={dot.xp} y={dot.yp} width={ref.current.width} height={ref.current.height} text={dot.text}/>
+                })
+            );
+        }
+    }
     
     return(
         <main>
@@ -299,7 +313,41 @@ function Module({submitOnCompletion}){
                         <>
                             {data.content[cIndex].type === "Custom" &&
                                 <div className={styles.contentContainer}>
-                                    <iframe src={`${BASE_URL}/content/${data.content[cIndex].cid}`}/>
+                                    <iframe src={`${BASE_URL}/content/${data.content[cIndex].cid}.html`}/>
+                                </div>
+                            }
+
+                            {data.content[cIndex].type === "Text" &&
+                                <div className={styles.window}>
+                                    <div className={styles.header}>
+                                        {data.content[cIndex].name}
+                                    </div>
+                                    <div className={styles.content}>
+                                        <p>{data.content[cIndex].data.text}</p>
+                                    </div>
+                                </div>
+                            }
+
+                            {data.content[cIndex].type === "Image" &&
+                                <div className={styles.window}>
+                                    <div className={styles.header}>
+                                        {data.content[cIndex].name}
+                                    </div>
+                                    <div className={styles.content}>
+                                        <div className={styles.imgContainer}>
+                                            <img className={styles.img} src={`${BASE_URL}/content/${data.content[cIndex].cid}.${data.content[cIndex].data.image}`}/>
+                                        </div>
+                                        <p>{data.content[cIndex].data.text}</p>
+                                    </div>
+                                </div>
+                            }
+
+                            {data.content[cIndex].type === "Dynamic Image" &&
+                                <div className={styles.dynamicImage}>
+                                    <div className={styles.dotsContainer}>
+                                        {dots}
+                                    </div>
+                                    <img ref={ref} src={`${BASE_URL}/content/${data.content[cIndex].cid}.${data.content[cIndex].data.image}`} onLoad={loadedImage}/>
                                 </div>
                             }
 

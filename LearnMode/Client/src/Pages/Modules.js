@@ -11,6 +11,8 @@ import { useEffect, useState } from "react";
 
 import {getEnrolledModules, getHomeModules, getInstructingModules, getMyModules, getMyModulesLimit, searchModules} from '../api/index.js'
 
+import { deleteModule } from "../api/index.js";
+
 function Modules(){
     
     const nav = useNavigate();
@@ -26,7 +28,8 @@ function Modules(){
     const [searchedOnce, setSearchedOnce] = useState(false);
     const [attemptingDelete, setAttemptingDelete] = useState(false);
 
-    useEffect(() => {
+
+    function setupModules(){
         getHomeModules()
             .then((res) => {
                 setCreated(compileModules(res?.data?.created, "created"));
@@ -43,13 +46,17 @@ function Modules(){
                     setShowing("instructing");
                 }
             });
+    }
+
+    useEffect(() => {
+        setupModules();
     }, []);
 
     function compileModules(data, type){
         let list = [];
         if(data?.map){
             data.map((m, index) => {
-                list.push(<ModulePreview key={index} module={m} onClick={() => openModule(m, type)}/>)
+                list.push(<ModulePreview key={index} mid={m.mid} module={m} onClick={() => openModule(m, type)}/>)
             });
         }
 
@@ -99,8 +106,16 @@ function Modules(){
         setAttemptingDelete(false);
     }, [modalOpen]);
 
-    function deleteModule(mid){
-        console.log(`Deleting module ${mid}`);
+    function confirmDelete(){
+        setModalOpen(false);
+
+        setCreated((prev) => {
+            return prev.filter((prev) => {
+                return prev.props.mid != current.mid;
+            });
+        });
+
+        deleteModule(current.mid);
     }
     
     return(
@@ -200,7 +215,7 @@ function Modules(){
                                     <span>Are you sure you want to delete this module?</span>
                                     <div>
                                         <button onClick={() => {setAttemptingDelete(false)}}>Cancel</button>
-                                        <button className={styles.delete} onClick={() => {deleteModule(current.mid)}}>Delete</button>
+                                        <button className={styles.delete} onClick={() => {confirmDelete()}}>Delete</button>
                                     </div>
                                 </div>
                             :

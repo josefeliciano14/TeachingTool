@@ -1,8 +1,12 @@
 export function getFileExtension(fileName){
-    console.log("File Name: ");
-    console.log(fileName);
-    
-    let divs = fileName.split(".");
+    if(fileName){
+        let divs = fileName.split(".");
 
-    return divs[divs.length-1];
+        return divs[divs.length-1];
+    }
+    else{
+        return fileName;
+    }
 }
+
+export let supportedImgFormats = ["png", "jpeg", "gif", "svg", "bmp", "ico"];

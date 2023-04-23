@@ -20,6 +20,7 @@ export const contentPath = path.join(__dirname, "files", "content");
 export const imagesPath = path.join(__dirname, "files", "images");
 
 //Create directories if they don't exist 
+
 if (!fs.existsSync(contentPath)){
     fs.mkdirSync(contentPath);
 }
