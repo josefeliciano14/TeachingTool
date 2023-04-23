@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { getQuestionImage } from '../controllers/images.js';
+import { getContentImage, getQuestionImage } from '../controllers/images.js';
 
 const router = express.Router();
 

@@ -4,9 +4,9 @@ import fs from 'fs';
 
 export const getContent = async (req, res) => {
     //try{
-        const cid = req.params.cid;
+        const name = req.params.name;
 
-        const filePath = path.join(contentPath, `${cid}.html`);
+        const filePath = path.join(contentPath, name);
             
         if(fs.existsSync(filePath)){
             res.sendFile(filePath);

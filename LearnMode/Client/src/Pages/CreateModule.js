@@ -77,10 +77,10 @@ function CreateModule(){
 
             questions: questionInfo
         }));
-        
+
         createModule(formData)
             .then(() => {
-                nav("/modules");
+                nav("/");
             });
     }
 
@@ -156,6 +156,7 @@ function CreateModule(){
     function addContent(){
         const newInfo = {
             name: "",
+            description: "",
             type: "",
             data: {},
             file: {}
@@ -173,6 +174,10 @@ function CreateModule(){
             return prev+1;
         });
     }
+
+    useEffect(() => {
+        console.log(testEnabled);
+    }, [testEnabled]);
 
     return(
         <main>
@@ -257,13 +262,13 @@ function CreateModule(){
 
             <div className={styles.buttonContainer}>
                 {page > 1 && 
-                <button className={styles.button} onClick={() => setPage((prev) => {return prev-1;})}>Prev</button>
+                    <button className={styles.button} onClick={() => setPage((prev) => {return prev-1;})}>Prev</button>
                 }
-                {page < 4 &&
-                <button className={styles.button} onClick={() => setPage((prev) => {return prev+1;})}>Next</button>
+                {(page < 4 && !(page === 3 && testEnabled === "No")) &&
+                    <button className={styles.button} onClick={() => setPage((prev) => {return prev+1;})}>Next</button>
                 }
-                {page === 4 &&
-                <button className={styles.button} onClick={() => sendRequest()}>Submit</button>
+                {(page === 4 || (page === 3 && testEnabled === "No")) &&
+                    <button className={styles.button} onClick={() => sendRequest()}>Submit</button>
                 }
             </div>
         </main>

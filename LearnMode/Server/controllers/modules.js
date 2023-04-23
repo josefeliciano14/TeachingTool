@@ -2,7 +2,7 @@ import db from './../database/database.js'
 import fs from 'fs';
 import path from 'path';
 import { contentPath, imagesPath } from '../index.js';
-import { getFileExtension } from '../global/global.js';
+import { getFileExtension, supportedImgFormats } from '../global/global.js';
 
 export const getMyModules = async (req, res) => {
     
@@ -171,7 +171,7 @@ export const getModuleImage = async (req, res) => {
             }
 
             if(result.length > 0 && result[0].image){
-                const filePath = path.join(imagesPath, "modules", result[0].image);
+                const filePath = path.join(imagesPath, "modules", `${mid}.${result[0].image}`);
 
                 if(fs.existsSync(filePath)){
                     res.sendFile(filePath);
@@ -322,6 +322,12 @@ export const getModule = async (req, res) => {
             });
         });
 
+        content = content.map((c) => {
+            c.data = JSON.parse(c.data);
+
+            return c;
+        });
+
         return res.status(200).json({
             role: role,
             info: info,
@@ -455,7 +461,7 @@ export const getModuleSection = async (req, res) => {
 }
 
 export const createModule = async (req, res) => {
-    try{
+    //try{
         
         const module = JSON.parse(req.body.data);
 
@@ -474,7 +480,8 @@ export const createModule = async (req, res) => {
         const is_public = module.is_public ? module.is_public : false;
         const code = module.code ? module.code.trim() : "";
         const image = req?.files?.img ? req.files.img.name : null;
-        const modulePayload = [name, description, user_id, is_public, code, image];
+        const fileExtension = getFileExtension(image);
+        const modulePayload = [name, description, user_id, is_public, code, fileExtension];
 
         const evaluationEnabled = module.evaluationEnabled ? module.evaluationEnabled : false;
         const evaluationName = module.evaluationName ? module.evaluationName : "(No Name)";
@@ -491,7 +498,6 @@ export const createModule = async (req, res) => {
             //Upload module image in images/modules
             if(req?.files?.img){
                 const file = req.files.img;
-                const fileExtension = getFileExtension(file.name);
                 file.mv(path.join(imagesPath, "modules", `${module_id}.${fileExtension}`));
             }
 
@@ -522,6 +528,20 @@ export const createModule = async (req, res) => {
                             return;
                         }
                     }
+                    else if(c.type === "Image" || c.type === "Dynamic Image"){
+                        //No image file was provided
+                        if(!req.files[`c${cIndex}`]){
+                            
+                            console.log(`File c${cIndex} not found`);
+                            return;
+                        }
+
+                        //Image format not supported 
+                        if(!supportedImgFormats.includes(getFileExtension(req.files[`c${cIndex}`].name).toLowerCase())){
+                            console.log("Image format not supported");
+                            return;
+                        }
+                    }
 
                     if(c?.file){
                         delete c.file;
@@ -530,8 +550,13 @@ export const createModule = async (req, res) => {
                     const contentName = c.name ? c.name : "";
                     const contentDescription = c.description ? c.description : "";
                     const contentData = c.data ? JSON.stringify(c.data) : "{}";
+                    const contentType = c.type;
+                    let fileExtension = null;
+                    if(contentType === "Custom" || contentType === "Image" || contentType === "Dynamic Image"){
+                        fileExtension = getFileExtension(req.files[`c${cIndex}`].name);
+                    }
 
-                    const contentPayload = [module_id, contentName, contentDescription, c.type, contentData, cIndex];
+                    const contentPayload = [module_id, contentName, contentDescription, contentType, contentData, cIndex];
 
                     db.query("INSERT INTO DynamicContent(module, name, description, type, data, ind) VALUES(?, ?, ?, ?, ?, ?);", contentPayload, (error, result) => {
                         if(error){
@@ -544,7 +569,7 @@ export const createModule = async (req, res) => {
                             const file = req.files[`c${index}`];
                         
                             //Save file in content directory 
-                            file.mv(path.join(contentPath, `${content_id}.html`));
+                            file.mv(path.join(contentPath, `${content_id}.${fileExtension}`));
                         }
                     });
 
@@ -560,8 +585,6 @@ export const createModule = async (req, res) => {
                 }
 
                 const evaluation_id = result.insertId;
-                
-                console.log(`Created Evaluation with ID: ${evaluation_id}`);
 
                 if(module.questions){
 
@@ -627,6 +650,57 @@ export const createModule = async (req, res) => {
             return res.status(201).json("Routine Added");
         });
 
+    /*}catch (error){
+        res.status(500).send("Internal Server Error");
+    }*/
+}
+
+export const deleteModule = async (req, res) => {
+    try{
+        const mid = Number(req.params.mid);
+
+        const user_id = req.uid;
+
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        } 
+
+        //Delete Dynamic Content
+        let sql1 = "DELETE FROM DynamicContent WHERE module=?;";
+        await new Promise((resolve, reject) => {
+            db.query(sql1, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                resolve();
+            }); 
+        });
+
+        //Delete Evaluation
+        let sql2 = "DELETE FROM Evaluations WHERE module=?;";
+        await new Promise((resolve, reject) => {
+            db.query(sql2, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                resolve();
+            }); 
+        });
+
+        //Delete Module
+        let sql3 = "DELETE FROM Modules WHERE mid=?;";
+        await new Promise((resolve, reject) => {
+            db.query(sql3, [mid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                resolve();
+            }); 
+        });
     }catch (error){
         res.status(500).send("Internal Server Error");
     }

@@ -23,14 +23,3 @@ CREATE TABLE Questions(qid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, evaluation I
 CREATE TABLE Options(oid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, question INT NOT NULL, FOREIGN KEY (question) REFERENCES Questions(qid), answer TEXT NOT NULL, is_correct boolean NOT null, ind INT);
 
 CREATE TABLE Scores(uid INT NOT NULL, FOREIGN KEY (uid) REFERENCES Users(uid), evaluation INT NOT NULL, FOREIGN KEY (evaluation) REFERENCES Evaluations(eid), score INT NOT NULL, max_score INT NOT NULL, PRIMARY KEY(uid, evaluation), is_diagnostic boolean NOT NULL, date_taken datetime default now());
-
-SELECT mid, M.name, image FROM Instructs LEFT JOIN Sections S on Instructs.sid = S.sid LEFT JOIN Modules M on M.mid = S.module LEFT JOIN Instructors I on Instructs.iid = I.iid WHERE I.uid=1 ORDER BY M.date_created DESC
-
-SELECT uid FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Enrollments E on S.sid = E.sid WHERE mid=31 AND E.uid=1 AND S.sid=1
-
-SELECT mid, name, description, is_public FROM Modules WHERE mid=31;
-
-UPDATE Modules SET is_public=false WHERE mid=31
-
-SELECT * FROM Modules LEFT JOIN Sections S on Modules.mid = S.module LEFT JOIN Instructs I on S.sid = I.sid LEFT JOIN Instructors I2 on I.iid = I2.iid WHERE Modules.mid=31 AND I2.uid=1
-
