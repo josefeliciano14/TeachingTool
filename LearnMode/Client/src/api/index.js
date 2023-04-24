@@ -12,6 +12,9 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
+export const getProfile = () => API.get('/users/profile');
+export const updateProfile = (profile) => API.put('/users/profile', profile);
+
 export const getMyModules = () => API.get('/modules');
 export const getMyModulesLimit = (limit) => API.get(`/modules/limit/${limit}`);
 export const getHomeModules = () => API.get('/modules/home');

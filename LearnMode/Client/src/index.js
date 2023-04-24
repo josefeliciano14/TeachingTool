@@ -17,6 +17,7 @@ import CreateSection from './Pages/CreateSection';
 import Instructors from './Pages/Instructors';
 import Instructor from './Pages/Instructor';
 import AddInstructor from './Pages/AddInstructor';
+import Profile from './Pages/Profile';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -26,6 +27,7 @@ root.render(
       <Route path='/' element={<Modules/>}/>
       <Route path="/login" element={<Login/>}/>
       <Route path="/register" element={<Register/>}/>
+      <Route path='/profile' element={<Profile/>}/>
       <Route path='/module/:mid' element={<Module submitOnCompletion={false}/>}/>
       <Route path='/module/:mid/section/:sid' element={<Module submitOnCompletion={true}/>}/>
       <Route path='/create-module' element={<CreateModule/>}/>

@@ -1,10 +1,15 @@
 import express from 'express';
 
-import {signin, signup} from '../controllers/users.js'
+import {signin, signup, getProfile, updateProfile, getProfilePicture} from '../controllers/users.js'
+
+import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
-router.post('/signin', signin)
-router.post('/signup', signup)
+router.post('/signin', signin);
+router.post('/signup', signup);
+router.get('/profile', auth, getProfile);
+router.put('/profile', auth, updateProfile);
+router.get('/profile/picture/:uid', getProfilePicture);
 
 export default router;

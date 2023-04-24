@@ -13,12 +13,12 @@ nav{
   z-index: 999;
 }
 
-.nav-menu-container{
+.navMenuContainer{
   width: 0px;
   height: 0px;
 }
 
-.nav-menu{
+.navMenu{
   background-color: var(--main-color);
   width: 250px;
   position: relative;
@@ -27,7 +27,7 @@ nav{
   border: 1px solid black;
 }
 
-.nav-menu-item{
+.navMenuItem{
   width: 100%;
   height: 50px;
 
@@ -38,15 +38,15 @@ nav{
   font-size: 20px;
 }
 
-.nav-menu-item:hover{
+.navMenuItem:hover{
   background-color: #2A5C2D;
 }
 
-.nav-menu-item > span{
+.navMenuItem > span{
   margin-left: 20px;
 }
 
-.menu-icon{
+.menuIcon{
   margin-left: 30px;
   font-size: 25px;
 }
@@ -58,7 +58,7 @@ nav{
   align-items: center;
 }
 
-.logo-icon{
+.logoIcon{
   font-size: 40px;
 }
 
@@ -68,17 +68,48 @@ nav{
   font-size: 18px;
 }
 
-.user-menu-container{
+.userMenuContainer{
+  width: 0px;
+  height: 0px;
   position: relative;
 }
 
-.user-menu{
-  width: 100px;
-  position: absolute;
-  right: 30px;
-  top: 15px;
-  background-color: var(--third-color);
+.userMenu{
+  width: 200px;
+  position: relative;
+  right: 200px;
+  top: 40px;
+  background-color: var(--main-color);
   padding: 10px;
   text-align: center;
   cursor: pointer;
+  border: 1px solid black;
+}
+
+.userMenu:hover{
+  background-color: #2A5C2D;
+}
+
+.logo{
+  font-size: 30px;
+  font-weight: 600;
+  margin-left: 50px;
+}
+
+.profilePictureContainer{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 20px;
+  
+  img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+}
+
+.emptyspace{
+  flex: 1;
 }

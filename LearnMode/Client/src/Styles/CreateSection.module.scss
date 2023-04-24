@@ -9,6 +9,69 @@
     color: white;
 }
 
+@mixin content(){
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+    border: 1px solid var(--main-color);
+    border-radius: 0px 0px 6px 6px;
+
+    .input{
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+
+    input[type="text"], textarea{
+        background-color: var(--secondary-color);
+        border: none;
+        border-radius: 6px;
+        padding: 6px;
+    }
+
+    select{
+        min-width: 300px;
+        border: none;
+        background-color: var(--secondary-color);
+        border-radius: 6px;
+        padding: 6px;
+    }
+
+    .error{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        p{
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .button{
+            @include button();
+        }
+    }
+
+    .buttonContainer{
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .button{
+            @include button();
+        }
+    }
+
+    .permission{
+        label{
+            margin-left: 20px;
+        }
+    }
+    
+}
+
 .window{
     color: black;
     background-color: white;
@@ -30,63 +93,38 @@
     }
 
     .content{
-        display: flex;
-        flex-direction: column;
-        padding: 40px;
-        border: 1px solid var(--main-color);
-        border-radius: 0px 0px 6px 6px;
+        @include content();
+    }
 
-        .input{
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
+    .profileForm{
+        @include content();
+        
+        label{
+            margin-top: 20px;
         }
 
-        input, textarea{
-            background-color: var(--secondary-color);
-            border: none;
-            border-radius: 6px;
-            padding: 6px;
-        }
-
-        select{
-            min-width: 300px;
-            border: none;
-            background-color: var(--secondary-color);
-            border-radius: 6px;
-            padding: 6px;
-        }
-
-        .error{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            p{
-                font-size: 18px;
-                font-weight: 600;
-            }
-
-            .button{
-                @include button();
-            }
-        }
-
-        .buttonContainer{
-
+        .imgForm{
             display: flex;
             align-items: center;
-            justify-content: center;
 
-            .button{
-                @include button();
+            input{
+                margin-left: 50px;
             }
-        }
+            
+            .imgContainer{
+                border: 1px solid black;
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                overflow: none;
+                margin-left: 100px;
 
-        .permission{
-            label{
-                margin-left: 20px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    object-fit: contain;
+                }
             }
         }
     }

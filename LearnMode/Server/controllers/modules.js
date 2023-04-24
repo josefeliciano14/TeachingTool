@@ -600,8 +600,9 @@ export const createModule = async (req, res) => {
                         const prompt = question.prompt ? question.prompt : "";
                         const information = question.description ? question.description : "";
                         const image = req?.files[`q${index}`]?.name ? req?.files[`q${index}`]?.name : null;
+                        const fileExtension = getFileExtension(image);
 
-                        const questionPayload = [evaluation_id, prompt, information, qIndex, image];
+                        const questionPayload = [evaluation_id, prompt, information, qIndex, fileExtension];
                         
                         db.query("INSERT INTO Questions(evaluation, prompt, information, ind, image) VALUES(?, ?, ?, ?, ?);", questionPayload, (error, result) => {
                             if(error){
@@ -610,12 +611,9 @@ export const createModule = async (req, res) => {
 
                             const question_id = result.insertId;
 
-                            console.log(`Created Question with ID: ${question_id}`);
-
                             //Upload module image in images/modules
                             if(req?.files && req?.files[`q${index}`]){
                                 const file = req.files[`q${index}`];
-                                const fileExtension = getFileExtension(file.name);
                                 file.mv(path.join(imagesPath, "questions", `${question_id}.${fileExtension}`));
                             }
 
@@ -679,9 +677,9 @@ export const deleteModule = async (req, res) => {
         });
 
         //Delete Evaluation
-        let sql2 = "DELETE FROM Evaluations WHERE module=?;";
+        let sql3 = "DELETE FROM Evaluations WHERE module=?;";
         await new Promise((resolve, reject) => {
-            db.query(sql2, [mid], (error, result) => {
+            db.query(sql3, [mid], (error, result) => {
                 if(error){
                     throw error;
                 }
@@ -691,9 +689,9 @@ export const deleteModule = async (req, res) => {
         });
 
         //Delete Module
-        let sql3 = "DELETE FROM Modules WHERE mid=?;";
+        let sql4 = "DELETE FROM Modules WHERE mid=?;";
         await new Promise((resolve, reject) => {
-            db.query(sql3, [mid], (error, result) => {
+            db.query(sql4, [mid], (error, result) => {
                 if(error){
                     throw error;
                 }

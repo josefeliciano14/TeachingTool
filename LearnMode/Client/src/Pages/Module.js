@@ -101,7 +101,7 @@ function Module({submitOnCompletion}){
                     else{
                         //Wrap up current question 
                         current.answers=aList;
-                        qList.push(<Question key={index} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
+                        qList.push(<Question key={index} qid={q.qid} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
                         current.answers=aList2;
                         qInfo.push(current);
 
@@ -121,7 +121,7 @@ function Module({submitOnCompletion}){
             });
 
             current.answers=aList;
-            qList.push(<Question key={qList.length} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
+            qList.push(<Question key={qList.length} qid={current.qid} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
             current.answers=aList2;
             qInfo.push(current);
 

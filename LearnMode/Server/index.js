@@ -16,16 +16,22 @@ import { fileURLToPath } from 'url';
 
 export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = path.dirname(__filename);
+export const filesPath = path.join(__dirname, "files");
 export const contentPath = path.join(__dirname, "files", "content");
 export const imagesPath = path.join(__dirname, "files", "images");
 
 //Create directories if they don't exist 
-
+if (!fs.existsSync(filesPath)){
+    fs.mkdirSync(filesPath);
+}
 if (!fs.existsSync(contentPath)){
     fs.mkdirSync(contentPath);
 }
 if (!fs.existsSync(imagesPath)){
     fs.mkdirSync(imagesPath);
+}
+if (!fs.existsSync(path.join(imagesPath, "users"))){
+    fs.mkdirSync(path.join(imagesPath, "users"));
 }
 if (!fs.existsSync(path.join(imagesPath, "modules"))){
     fs.mkdirSync(path.join(imagesPath, "modules"));
