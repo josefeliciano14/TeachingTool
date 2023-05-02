@@ -74,10 +74,6 @@
     }
 }
 
-h3{
-    color: black;
-}
-
 button{
     @include button;
     background-color: var(--main-color);

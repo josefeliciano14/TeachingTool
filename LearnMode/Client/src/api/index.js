@@ -12,16 +12,18 @@ API.interceptors.request.use((req) => {
     return req;
 });
 
+export const register = (payload) => API.post('/users/signup', payload);
 export const getProfile = () => API.get('/users/profile');
 export const updateProfile = (profile) => API.put('/users/profile', profile);
+export const getRole = () => API.get('/users/role');
 
 export const getMyModules = () => API.get('/modules');
 export const getMyModulesLimit = (limit) => API.get(`/modules/limit/${limit}`);
 export const getHomeModules = () => API.get('/modules/home');
 export const createModule = (module) => API.post('/modules', module);
-export const getModule = (mid) => API.get(`/modules/${mid}`);
+export const getModule = (mid, sid) => API.get(`/modules/${mid}?sid=${sid}`);
+export const getModuleEdit = (mid) => API.get(`/modules/edit/${mid}`);
 export const deleteModule = (mid) => API.delete(`/modules/${mid}`);
-export const getModuleSection = (mid, sid) => API.get(`/modules/${mid}/section/${sid}`);
 export const getModuleWithCode = (mid, code) => API.get(`/modules/${mid}?code=${code}`);
 export const getEnrolledModules = () => API.get(`/modules/enrolled`);
 export const getInstructingModules = () => API.get(`/modules/instructing`);
@@ -31,6 +33,8 @@ export const getSections = () => API.get('/sections');
 export const getSection = (sid) => API.get(`/sections/${sid}`);
 export const createSection = (section) => API.post(`/sections`, section);
 export const removeStudent = (uid, sid) => API.delete(`/sections/remove/${uid}/${sid}`);
+export const enrollInSection = (sid, code) => API.post(`sections/enroll/${sid}/${code}`);
+export const submitEvaluation = (sid, answers) => API.post(`/sections/evaluation/${sid}`, answers);
 
 export const getInstructors = () => API.get('/instructors');
 export const getInstructor = (iid, sid) => API.get(`/instructors/${iid}/${sid}`);

@@ -3,7 +3,7 @@ import Select from './Select';
 import { useEffect, useState } from 'react';
 import { useReducer } from 'react';
 
-function QuestionForm({index, question, setQuestionInfo, updateAnswerInfo}){
+function QuestionForm({index, question, setQuestionInfo, updateAnswerInfo, options}){
     
     const [answers, setAnswers] = useState([]);
     const [count, setCount] = useState(0);
@@ -61,12 +61,30 @@ function QuestionForm({index, question, setQuestionInfo, updateAnswerInfo}){
     }
 
     useEffect(() => {
-        setAnswers([
-            createAnswer(newInfo, 0),
-            createAnswer(newInfo, 1)
-        ]);
+        if(options?.length > 0){
+            setAnswers(
+                options?.map((a, index) => {
+                    console.log(a);
+                    
+                    let info = {
+                        correct: a.selected,
+                        answer: a.answer
+                    };
 
-        setCount(2);
+                    return createAnswer(info, index);
+                })
+            );
+            
+            setCount(answers?.length);
+        }
+        else{
+            setAnswers([
+                createAnswer(newInfo, 0),
+                createAnswer(newInfo, 1)
+            ]);
+    
+            setCount(2);
+        }
     }, []);
 
     

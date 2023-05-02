@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import './../Styles/Login.scss';
+import styles from './../Styles/Login.module.scss';
 
 function Login(){
     const [formData, setFormData] = useState({email: '', password: ''});
@@ -42,13 +42,19 @@ function Login(){
     
     return(
         <main>
-            <form className="login-register-form">
-                <h1>Login</h1>
-                <input type='text' name='email' placeholder='Email' onChange={handleChange}/>
-                <input type="password" name='password' placeholder='Password' onChange={handleChange}/>
-                <button onClick={login}>Login</button>
-                <Link className="link" to="/register">Don't have an account? Register Here</Link>
-                <span style={{visibility:(errorMessage!="no message" ? "visible" : "hidden")}} className="error-message">{errorMessage}</span>
+            <form className={styles.loginRegisterForm}>
+                <div className={styles.header}>
+                    <h1>Login</h1>
+                </div>
+                <div className={styles.content}>
+                    <input type='text' name='email' placeholder='Email' onChange={handleChange}/>
+                    <input type="password" name='password' placeholder='Password' onChange={handleChange}/>
+                    <div className={styles.buttonContainer}>
+                        <button onClick={login}>Login</button>
+                        <Link className={styles.link} to="/register">Don't have an account? Register Here</Link>
+                        <span style={{visibility:(errorMessage!="no message" ? "visible" : "hidden")}} className={styles.errorMessage}>{errorMessage}</span>
+                    </div>
+                </div>
             </form>
         </main>
     )

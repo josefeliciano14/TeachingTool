@@ -35,7 +35,7 @@ function Navbar(){
     
         setUser("");
     
-        nav("/");
+        nav("/login");
     }
 
     function openNavMenu(){
@@ -81,7 +81,9 @@ function Navbar(){
             <div className={styles.emptyspace}></div>
             <i className="fa-solid fa-bars"></i>
             <div className={styles.profilePictureContainer}>
-                <img src={`${BASE_URL}/users/profile/picture/${decode(localStorage.getItem("auth")).uid}`}/>
+                {localStorage.getItem("auth") &&
+                    <img src={`${BASE_URL}/users/profile/picture/${decode(localStorage.getItem("auth")).uid}`}/>
+                }
             </div>
             <div className={styles.user} onClick={openUserMenu}>{user} <FontAwesomeIcon icon={faCaretDown}/></div>
             {userMenuOpen &&

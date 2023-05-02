@@ -44,7 +44,7 @@ export const signin = async (req, res) => {
 }
 
 export const signup = async (req, res) => {
-    try{
+    //try{
         const {email, password, first_name, last_name, picture} = req.body;
 
         if(email.length > 50){
@@ -67,21 +67,35 @@ export const signup = async (req, res) => {
 
             const hashedPassword = await bcrypt.hash(password, 12);
 
+            let fileExtension = null;
+            let file = null;
+            if(req?.files?.img){
+                file = req.files.img;
+                fileExtension = getFileExtension(file.name);
+            }
+
             sql = "INSERT INTO Users(first_name, last_name, email, password, picture) VALUES(?, ?, ?, ?, ?)";
-            db.query(sql, [first_name, last_name, email, hashedPassword, picture], (error, result) => {
+            db.query(sql, [first_name, last_name, email, hashedPassword, fileExtension], async (error, result) => {
                 if(error){
                     throw error;
                 }
 
-                const token = jwt.sign({uid: result.insertId, email: email}, SECRET_KEY);
+                const uid = result.insertId;
+
+                //Upload file if uploaded in images/users
+                if(file){
+                    file.mv(path.join(imagesPath, "users", `${uid}.${fileExtension}`));
+                }
+
+                const token = jwt.sign({uid: uid, email: email}, SECRET_KEY);
 
                 return res.status(200).json({"token": token});
             });
         });
 
-    }catch(error){
+    /*}catch(error){
         res.status(500).json({message: "Something went wrong"});
-    }
+    }*/
 }
 
 export const getProfile = async (req, res) => {
@@ -260,6 +274,34 @@ export const getProfilePicture = async (req, res) => {
         else{
             return res.status(404);
         }
+    }catch(error){
+        res.status(500).json({message: "Something went wrong"});
+    }
+}
+
+export const getRole = async (req, res) => {
+    try{
+        const user_id = req.uid;
+
+        //Check if user is authenticated
+        if(!user_id){
+            return res.status(401).send("Unauthenticated");
+        }
+
+        let sql = "SELECT Users.uid >= 0 as 'user_exists', I.uid >= 0 as 'is_instructor', P.uid >= 0 as 'is_professor' FROM Users LEFT JOIN Instructors I on Users.uid = I.uid LEFT JOIN Professors P on Users.uid = P.uid WHERE Users.uid=?;";
+        db.query(sql, [user_id], (error, result) => {
+            if(error){
+                throw error;
+            }
+
+            if(result?.length > 0){
+                res.status(200).json(result[0]);
+            }
+            else{
+                res.status(404).json({message: "User not found"});
+            }
+        });
+
     }catch(error){
         res.status(500).json({message: "Something went wrong"});
     }

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Navbar from "../Components/Navbar";
 import ModulePreview from "../Components/ModulePreview";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { faMagnifyingGlass, faPlus } from '@fortawesome/free-solid-svg-icons'
 
@@ -28,6 +28,7 @@ function Modules(){
     const [searchedOnce, setSearchedOnce] = useState(false);
     const [attemptingDelete, setAttemptingDelete] = useState(false);
 
+    const [searchParams] = useSearchParams();
 
     function setupModules(){
         getHomeModules()
@@ -36,7 +37,10 @@ function Modules(){
                 setEnrolled(compileModules(res?.data?.enrolled, "enrolled"));
                 setInstructing(compileModules(res?.data?.instructing, "instructing"));
 
-                if(res?.data?.created?.length > 0){
+                if(searchParams.get('show')){
+                    setShowing(searchParams.get('show'));
+                }
+                else if(res?.data?.created?.length > 0){
                     setShowing("created");
                 }
                 else if(res?.data?.enrolled?.length > 0){
@@ -162,19 +166,6 @@ function Modules(){
                                     </div>
                                     <div>
                                         <span>{"Create Module"}</span>
-                                    </div>
-                                </div>
-                            </Link>
-                        }
-
-                        {showing === "enrolled" &&
-                            <Link className={styles2.modulepreviewContainer} to="/enroll">
-                                <div className={styles2.modulepreview}>
-                                    <div className={styles2.modulepreviewImage}>
-                                        <FontAwesomeIcon icon={faPlus}/>
-                                    </div>
-                                    <div>
-                                        <span>{"Enroll in Section"}</span>
                                     </div>
                                 </div>
                             </Link>
