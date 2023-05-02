@@ -270,6 +270,12 @@ function handleResultButtonClick(e) {
         case "Anti-HSA + BSA":
             centerAntiHSA_BSA(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
             break;
+        case "BSA + Ins":
+            centerBSA_Ins(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+            break;
+        case "Anti-BSA + Anti-Ins":
+            centerAntiBSA_AntiIns(centerValue,circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value);
+            break;
     }
 }
 
@@ -339,8 +345,8 @@ function drawLongerLinesLeft(circle){
     const angle = Math.PI*(2/6)*val; //current circle
     const angle1 = Math.PI*(2/6)*(val+1); //next circle
 
-    const r1 = 0.417**(plate.offsetWidth / 2); //125
-    const r3 = 0.533**(plate.offsetWidth / 2); //160
+    const r1 = 0.417*(plate.offsetWidth / 2); //125
+    const r3 = 0.533*(plate.offsetWidth / 2); //160
     const centerX = plate.offsetWidth / 2;
     const centerY = plate.offsetHeight / 2; 
 
@@ -754,9 +760,192 @@ function centerAntiHSA_BSA(a,b,c,d,e,f,g){
     }
 }
 
+function centerBSA_Ins(a,b,c,d,e,f,g){
+    const centerValue = a;
+    const circleValues = [b, c, d, e, f, g];
+
+    for(let i = 0; i < 6; i++) {
+        if(centerValue == "BSA + Ins"){
+            if(circleValues[i] == "Anti-BSA"){
+                if(i == 5){
+                    if(circleValues[i-5] == "Anti-Ins"){
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                    else if(circleValues[i-5] == "Anti-BSA"){
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+                else if(circleValues[i+1] == "Anti-Ins"){
+                    if(i == 0){
+                        drawLongerLinesLeft(i+5);
+                        drawLongerLinesRight(i);
+                    }
+                    else{
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                }
+                else if(circleValues[i+1] == "Anti-BSA"){
+                    if(i == 0){
+                        drawCurves(i);
+                        drawLines(i);
+                        drawLines(i+5); 
+                    }
+                    else{
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+
+            }
+            else if(circleValues[i] == "Anti-Ins"){
+                if(i == 5){
+                    if(circleValues[i-5] == "Anti-BSA"){
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                    else if(circleValues[i-5] == "Anti-Ins"){
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+                else if(circleValues[i+1] == "Anti-BSA"){
+                    if(i == 0){
+                        drawLongerLinesLeft(i+5);
+                        drawLongerLinesRight(i);
+                    }
+                    else{
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                }
+                else if(circleValues[i+1] == "Anti-Ins"){
+                    if(i == 0){
+                        drawCurves(i);
+                        drawLines(i);
+                        drawLines(i+5); 
+                    }
+                    else{
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+            }
+        }
+    }
+}
+
+function centerAntiBSA_AntiIns(a,b,c,d,e,f,g){
+    const centerValue = a;
+    const circleValues = [b, c, d, e, f, g];
+
+    for(let i = 0; i < 6; i++) {
+        if(centerValue == "Anti-BSA + Anti-Ins"){
+            if(circleValues[i] == "BSA"){
+                if(i == 5){
+                    if(circleValues[i-5] == "Ins"){
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                    else if(circleValues[i-5] == "BSA"){
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+                else if(circleValues[i+1] == "Ins"){
+                    if(i == 0){
+                        drawLongerLinesLeft(i+5);
+                        drawLongerLinesRight(i);
+                    }
+                    else{
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                }
+                else if(circleValues[i+1] == "BSA"){
+                    if(i == 0){
+                        drawCurves(i);
+                        drawLines(i);
+                        drawLines(i+5); 
+                    }
+                    else{
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+
+            }
+            else if(circleValues[i] == "Ins"){
+                if(i == 5){
+                    if(circleValues[i-5] == "BSA"){
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                    else if(circleValues[i-5] == "Ins"){
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+                else if(circleValues[i+1] == "BSA"){
+                    if(i == 0){
+                        drawLongerLinesLeft(i+5);
+                        drawLongerLinesRight(i);
+                    }
+                    else{
+                        drawLongerLinesLeft(i-1);
+                        drawLongerLinesRight(i);
+                    }
+                }
+                else if(circleValues[i+1] == "Ins"){
+                    if(i == 0){
+                        drawCurves(i);
+                        drawLines(i);
+                        drawLines(i+5); 
+                    }
+                    else{
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+            }
+            else if(circleValues[i] == "BSA + Ins"){
+                if(i == 5){
+                    if(circleValues[i-5] == "BSA + Ins"){
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+                else if(circleValues[i+1] == "BSA + Ins"){
+                    if(i == 0){
+                        drawCurves(i);
+                        drawLines(i);
+                        drawLines(i+5); 
+                    }
+                    else{
+                        drawCurves(i);
+                        drawLines(i-1);
+                        drawLines(i);
+                    }
+                }
+            }
+        }
+    }
+}
+
 //responsiveness
 function resizeMenus(){
-    centerMenu.style.width = "120%"; 
+    centerMenu.style.width = "auto"; 
     centerMenu.style.height = "auto"; 
     const fontSizeWidth = centerMenu.offsetWidth * 0.15; 
     const fontSizeHeight = centerMenu.offsetHeight * 0.16; 
@@ -765,7 +954,7 @@ function resizeMenus(){
 
     for(let i=1; i<=6; i++){
         const circleMenu = document.getElementById("circle" + i + "Menu");
-        circleMenu.style.width = "120%"; 
+        circleMenu.style.width = "auto"; 
         circleMenu.style.height = "auto";
 
         const fontSizeWidth = circleMenu.offsetWidth * 0.15; 
@@ -787,3 +976,7 @@ window.addEventListener('resize', function() {
     handleResultButtonClick();
     resizeMenus();
 });
+
+// drawLongerLinesLeft(0);
+// drawLongerLinesRight(1);
+
