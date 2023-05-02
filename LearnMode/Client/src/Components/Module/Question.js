@@ -1,10 +1,9 @@
 import styles from '../../Styles/Module.module.scss';
 import { BASE_URL } from '../../api';
 import Select from '../Select';
-import { useEffect, useState } from 'react';
 
 function Question({index, qid, prompt, information, image, answers, updateQuestionInfo}){
-    
+
     return(
         <div className={styles.window}>
             <div className={styles.header}>

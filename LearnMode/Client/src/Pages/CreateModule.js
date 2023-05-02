@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 import Toggle from "../Components/Toggle";
 import Select from "../Components/Select";
 import QuestionForm from "../Components/QuestionForm";
-import { createModule } from "../api";
+import { BASE_URL, createModule, getModuleEdit, getRole } from "../api";
 import DynamicContentForm from "../Components/DynamicContentForm";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-function CreateModule(){
+function CreateModule({edit}){
 
     const [page, setPage] = useState(1);
     
@@ -31,6 +31,10 @@ function CreateModule(){
     const [questionInfo, setQuestionInfo] = useState([]);
     const [count, setCount] = useState(0);
 
+    const [role, setRole] = useState("");
+
+    const {mid} = useParams();
+
     const nav = useNavigate();
 
     function sendRequest(){
@@ -39,8 +43,6 @@ function CreateModule(){
         if(moduleImgFile){
             formData.append('img', moduleImgFile);
         }
-
-
 
         contentInfo.map((content, index) => {
             if(content.file){
@@ -85,9 +87,130 @@ function CreateModule(){
     }
 
     useEffect(() => {
-        addContent();
+        if(edit){
+            getModuleEdit(mid)
+                .then((res) => {
+                    const module = res.data;
 
-        addQuestion();
+                    setName(module.info.name);
+                    setDescription(module.info.description);
+                    setCode(module.info.code);
+
+                    let forms = [];
+                    let info = [];
+
+                    new Promise((resolve, reject) => {
+                        module.content.map((content, index) => {
+                            forms.push(
+                                <DynamicContentForm key={index} index={index} content={content} isProfessor={true} setContentInfo={setContentInfo}/>
+                            );
+    
+                            info.push(
+                                {
+                                    name: content.name,
+                                    description: content.description,
+                                    type: content.type,
+                                    data: content.data,
+                                    file: {},
+                                    cid: content.cid
+                                }
+                            );
+
+                            resolve();
+                        });
+                    })
+                    .then(() => {
+                        setContent(forms);
+                        setContentInfo(info);
+
+                        setCount(module.content.length);
+                    });
+
+                    console.log(module);
+
+                    setTestName(module.evaluation.name);
+                    setTestDescription(module.evaluation.description);
+                    setTestEnabled(module.evaluation.is_enabled === 1 ? "Yes" : "No");
+                    setIsDiagnostic(module.evaluation.is_diagnostic === 1 ? "Yes" : "No");
+
+                    const eid = module.questions[0].eid;
+                    let qid = module.questions[0].qid; 
+        
+                    let qList = [];
+                    let aList = [];
+                    let aList2 = [];
+                    let qInfo = [];
+                    new Promise((resolve, reject) => {
+                        let current = {
+                            qid: module.questions[0].qid,
+                            prompt: module.questions[0].prompt,
+                            information: module.questions[0].information,
+                            image: module.questions[0].image
+                        };
+            
+                        module.questions.map((q, index) => {
+                            if(q.eid === eid){
+                                if(q.qid === qid){
+                                    aList.push(q.answer);
+                                    aList2.push({oid: q.oid, answer: q.answer, selected: false});
+                                }
+                                else{
+                                    //Wrap up current question 
+                                    current.answers=aList;
+                                    //qList.push(<Question key={index} qid={q.qid} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
+                                    qList.push(<QuestionForm key={index} index={qList.length} question={current} options={aList2} setQuestionInfo={setQuestionInfo}/>);
+                                    current.answers=aList2;
+                                    qInfo.push(current);
+            
+                                    //Start next one 
+                                    qid = q.qid;
+                                    aList = [q.answer];
+                                    aList2 = [{oid: q.oid, answer: q.answer, selected: false}];
+            
+                                    current = {
+                                        qid: q.qid,
+                                        prompt: q.prompt,
+                                        information: q.information,
+                                        image: q.image
+                                    };
+                                }
+                            }
+                        });
+            
+                        current.answers=aList;
+                        //qList.push(<Question key={qList.length} qid={current.qid} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
+                        qList.push(<QuestionForm key={qList.length} index={qList.length} question={current} options={aList2} setQuestionInfo={setQuestionInfo}/>);
+                        current.answers=aList2;
+                        qInfo.push(current);
+            
+                        console.log(qInfo);
+
+                        resolve();
+                    })
+                    .then(() => {
+                        setQuestions(qList);
+                        setQuestionInfo(qInfo);
+                    });
+                    
+                })
+                .catch((err) => {
+                    nav("/");
+                });
+        }
+        else{
+            addQuestion();
+
+            getRole()
+                .then((res) => {
+                    if(res?.data?.is_professor === 1){
+                        addContent(true);
+                        setRole("professor");
+                    }
+                    else{
+                        addContent(false);
+                    }
+                });
+        }
     }, []);
 
     function addQuestion(){
@@ -153,7 +276,7 @@ function CreateModule(){
         }
     }
 
-    function addContent(){
+    function addContent(is_professor){
         const newInfo = {
             name: "",
             description: "",
@@ -163,7 +286,7 @@ function CreateModule(){
         };
         
         setContent((prev) => {
-            return [...prev, <DynamicContentForm key={count} index={prev.length} setContentInfo={setContentInfo}/>]
+            return [...prev, <DynamicContentForm key={count} index={prev.length} setContentInfo={setContentInfo} isProfessor={is_professor}/>]
         });
 
         setContentInfo((prevInfo) => {
@@ -175,18 +298,13 @@ function CreateModule(){
         });
     }
 
-    useEffect(() => {
-        console.log(testEnabled);
-    }, [testEnabled]);
-
     return(
         <main>
             <Navbar/>
 
-            {page === 1 &&
-            <div className={styles.window}>
+            <div className={styles.window} style={{display: page === 1 ? "block" : "none"}}>
                 <div className={styles.header}>
-                    <h3>Create Module</h3>
+                    <h3>{edit ? "Edit Module" : "Create Module"}</h3>
                 </div>
                 <div className={styles.content}>
                     <div className={styles.largeInput}>
@@ -204,6 +322,10 @@ function CreateModule(){
                             {moduleImg &&
                                 <img style={styles.moduleImg} src={moduleImg}/>
                             }
+
+                            {(edit && mid && !moduleImg) &&
+                                <img style={styles.moduleImg} src={`${BASE_URL}/modules/image/${mid}`}/>
+                            }
                         </div>
                     </div>
                     <div className={styles.input}>
@@ -216,25 +338,25 @@ function CreateModule(){
                     </div>
                 </div>
             </div>
-            }
 
             <div style={{display: page === 2 ? "block" : "none"}}>
                 {content}
 
                 <div className={styles.buttonContainer}>
-                    <button className={styles.button} onClick={() => {addContent()}}>+ Add Content</button>
+                    <button className={styles.button} onClick={() => {addContent(role === "professor")}}>+ Add Content</button>
                 </div>
             </div>
 
-            {page === 3 &&
-            <div className={styles.window}>
+            <div className={styles.window} style={{display: page === 3 ? "block" : "none"}}>
                 <div className={styles.header}>
                     <h3>Create Module: Test</h3>
                 </div>
                 <div className={styles.content}>
                     <div className={styles.input}>
                         <label>Enable Test:</label>
-                        <Toggle leftText="Yes" rightText="No" default="Yes" update={setTestEnabled}/>
+                        {page === 3 &&
+                            <Toggle leftText="Yes" rightText="No" default={edit ? testEnabled : "Yes"} update={setTestEnabled}/>
+                        }
                     </div>
                     <div className={styles.largeInput}>
                         <label htmlFor="testname">Test Name:</label>
@@ -246,11 +368,12 @@ function CreateModule(){
                     </div>
                     <div className={styles.bottom}>
                         <label>Also Use As Diagnostic Test:</label>
-                        <Toggle leftText="Yes" rightText="No" default="No" update={setIsDiagnostic}/>
+                        {page === 3 &&
+                            <Toggle leftText="Yes" rightText="No" default={edit ? isDiagnostic : "No"} update={setIsDiagnostic}/>
+                        }
                     </div>
                 </div>
             </div>
-            }
 
             <div style={{display: page === 4 ? "block" : "none"}}>
                 {questions}

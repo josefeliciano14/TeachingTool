@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import styles from '../Styles/CreateModule.module.scss' 
+import { BASE_URL } from '../api';
 
-function DynamicContentForm({index, setContentInfo}){
+function DynamicContentForm({index, setContentInfo, isProfessor, content}){
     const [type, setType] = useState("");
     const [img, setImg] = useState();
     const [imgFile, setImgFile] = useState();
@@ -11,12 +12,15 @@ function DynamicContentForm({index, setContentInfo}){
 
     const imgRef = useRef();
     
-    const typeOptions = [
-        "Text", "Image", "Dynamic Image", "Webpage", "Custom"
-    ]
+    const typeOptions = isProfessor ? ["Text", "Image", "Dynamic Image", "Webpage", "Custom"] : ["Text", "Image", "Dynamic Image"];
 
     useEffect(() => {
-        setType(typeOptions[0]);
+        if(content){
+            setType(content.type);
+        }
+        else{
+            setType(typeOptions[0]);
+        }
     }, []);
 
     useEffect(() => {
@@ -82,6 +86,7 @@ function DynamicContentForm({index, setContentInfo}){
     }
 
     function addDot(e){
+        
         if(e.target.localName === "img"){
             const width = e.target.width;
             const height = e.target.height;
@@ -183,6 +188,60 @@ function DynamicContentForm({index, setContentInfo}){
             return prev;
         });
     }
+
+    function setUpDots(){
+        if(content?.type === "Dynamic Image" && content?.data?.dots){
+            let d = content.data.dots;
+            
+            let dotList = [];
+            let info = [];
+
+            new Promise((resolve, reject) => {
+                const imgWidth = imgRef.current.width;
+                const imgHeight = imgRef.current.height;
+                
+                d?.map((dot, index) => {
+                    let x = imgWidth*dot.xp;
+                    let y = imgHeight*dot.yp;
+                    
+                    dotList.push(
+                        <div key={index} dot_id={count} className={styles.dotContainer} style={{left: x, top: y}} onContextMenu={(e) => {removeDot(e, count)}}>
+                            <div className={styles.dot} onClick={() => {clickedDot(count)}}></div>
+                            <div className={styles.dotText} style={{display: "none"}}>
+                                <input type="text" defaultValue={dot.text} onChange={(e) => {updateText(count, e.target.value)}}/>
+                            </div>
+                        </div>
+                    );
+
+                    info.push(
+                        {id: index, x: x, y: y, xp: dot.xp, yp: dot.yp, open: false, text: dot.text}
+                    );
+                });
+
+                resolve();
+            })
+            .then(() => {
+                setDots(dotList);
+                setDotInfo(info);
+                setCount(dotList.length);
+            });
+        }
+    }
+
+    function loadedImage(){
+        onVisible(imgRef.current, () => {setUpDots()})
+    }
+
+    function onVisible(element, callback) {
+        new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+            if(entry.intersectionRatio > 0) {
+                callback(element);
+                observer.disconnect();
+            }
+            });
+        }).observe(element);
+    }
     
     return(
         <div className={styles.window}>
@@ -192,11 +251,11 @@ function DynamicContentForm({index, setContentInfo}){
             <div className={styles.content} style={{alignItems: "center"}}>
                 <div className={styles.largeInput}>
                     <label htmlFor={`name${index}`}>Name:</label>
-                    <input name={`name${index}`} id={`name${index}`} type="text" defaultValue={""} onChange={(e) => updateContentInfo("name", e.target.value)}/>
+                    <input name={`name${index}`} id={`name${index}`} type="text" defaultValue={content?.name} onChange={(e) => updateContentInfo("name", e.target.value)}/>
                 </div>
                 <div className={styles.largeInput}>
                     <label htmlFor={`description${index}`}>Description:</label>
-                    <textarea name={`description${index}`} id={`description${index}`} defaultValue={""} onChange={(e) => updateContentInfo("description", e.target.value)}/> 
+                    <textarea name={`description${index}`} id={`description${index}`} defaultValue={content?.description} onChange={(e) => updateContentInfo("description", e.target.value)}/> 
                 </div>
                 <div className={styles.bottom}>
                     <label htmlFor="content">Content Type:</label>
@@ -212,21 +271,31 @@ function DynamicContentForm({index, setContentInfo}){
                             <label>Image:</label>
                             <input type="file" onChange={imgChange}/>
                             <div className={styles.imgContainer}>
-                                {img &&
-                                    <img style={styles.moduleImg} src={img}/>
+                                {img &&  
+                                    <img className={styles.moduleImg} src={img}/>
+                                }
+
+                                {(!img && content?.data?.image) &&
+                                    <img className={styles.moduleImg} src={`${BASE_URL}/content/${content?.cid}.${content?.data?.image}`}/>
                                 }
                             </div>
                         </div>
                     }
                     {(type === "Text" || type === "Image") && 
                         <div className={styles.textInfo}>
-                            <input type="text" placeholder='Text Here' onChange={(e) => {updateContentInfo("text", e.target.value, true)}}/>
+                            <input type="text" placeholder='Text Here' defaultValue={content?.data?.text} onChange={(e) => {updateContentInfo("text", e.target.value, true)}}/>
                         </div>
                     }
                     {type === "Custom" &&
-                        <div className={styles.fileInput}>
-                            <input type="file" onChange={(e) => {handleFileChange(e)}}/>
-                        </div>
+                        <>
+                            <div className={styles.fileInput}>
+                                <input type="file" onChange={(e) => {handleFileChange(e)}}/>
+                            </div>
+
+                            {content &&
+                                <iframe src={`${BASE_URL}/content/${content.cid}.html`}/>
+                            }
+                        </>
                     }
                     {type === "Dynamic Image" &&
                         <>
@@ -238,7 +307,13 @@ function DynamicContentForm({index, setContentInfo}){
                                 <div className={styles.dotsContainer}>
                                     {dots}
                                 </div>
-                                <img style={styles.dynamicImage} src={img} ref={imgRef}/>
+                                {img &&  
+                                    <img className={styles.moduleImg} src={img} ref={imgRef} onLoad={loadedImage}/>
+                                }
+
+                                {(!img && content?.data?.image) &&
+                                    <img className={styles.moduleImg} src={`${BASE_URL}/content/${content?.cid}.${content?.data?.image}`} ref={imgRef} onLoad={loadedImage}/>
+                                }
                             </div>
                         </>
                         

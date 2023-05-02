@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import Navbar from "../Components/Navbar";
-import {BASE_URL, getModule, getModuleSection, getModuleWithCode} from '../api/index.js';
+import {BASE_URL, getModule, getModuleWithCode, submitEvaluation} from '../api/index.js';
 import styles from '../Styles/Module.module.scss';
 import Question from "../Components/Module/Question";
 import { API } from "../api/index.js";
@@ -16,7 +16,6 @@ function Module({submitOnCompletion}){
     const [cIndex, setCIndex] = useState(0);
     const [questions, setQuestions] = useState([]); 
     const [questionInfo, setQuestionInfo] = useState({});
-    const [diagnosticAnswers, setDiagnosticAnswers] = useState({});
     const [needCode, setNeedCode] = useState(false);
     const [incorrectCode, setIncorrectCode] = useState(false);
     const [code, setCode] = useState("");
@@ -30,19 +29,8 @@ function Module({submitOnCompletion}){
 
     useEffect(() => {
         
-        if(sid){
-            getModuleSection(mid, sid)
+        getModule(mid, sid)
             .then((res) => {
-                console.log(res.data);
-
-                setData(res.data);
-            });
-        }
-        else{
-            getModule(mid)
-            .then((res) => {
-                console.log(res);
-                
                 setData(res.data);
             })
             .catch((err) => {
@@ -53,7 +41,6 @@ function Module({submitOnCompletion}){
                     setNeedCode(true);
                 }
             });
-        }
     }, []);
 
     useEffect(() => {
@@ -76,7 +63,7 @@ function Module({submitOnCompletion}){
         setPayload(p);
         
         //Setup questions 
-        if(data?.questions?.length && data.questions.length > 0){
+        if(data?.questions?.length > 0){
             const eid = data.questions[0].eid;
             let qid = data.questions[0].qid; 
 
@@ -101,7 +88,7 @@ function Module({submitOnCompletion}){
                     else{
                         //Wrap up current question 
                         current.answers=aList;
-                        qList.push(<Question key={index} qid={q.qid} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
+                        qList.push(<Question key={index} qid={current.qid} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
                         current.answers=aList2;
                         qInfo.push(current);
 
@@ -122,10 +109,13 @@ function Module({submitOnCompletion}){
 
             current.answers=aList;
             qList.push(<Question key={qList.length} qid={current.qid} index={qList.length} prompt={current.prompt} information={current.information} image={current.image} answers={aList} updateQuestionInfo={updateQuestionInfo}/>);
+            console.log(`OutMap: Adding question with qid:${current.qid} and image:${current.image}`);
             current.answers=aList2;
             qInfo.push(current);
 
             console.log(qInfo);
+
+            console.log(qList);
 
             setQuestions(qList);
             setQuestionInfo(qInfo);
@@ -150,9 +140,6 @@ function Module({submitOnCompletion}){
                 return prev+1;
             });
         }
-        else{
-            console.log("End of module");
-        }
     }
 
     function updateQuestionInfo(index, aIndex, value){
@@ -165,69 +152,46 @@ function Module({submitOnCompletion}){
         });
     }
 
-    function submitEvaluation(){
+    function submit(){
         
-        if(sequence[state] === "Diagnostic"){
-            console.log("Submitting diagnostic");
+        if(submitOnCompletion && data.role === "enrolled"){
+            if(sequence[state] === "Diagnostic"){
+                setQuestionInfo((qInfo) => {
+                    setPayload((pl) => {
+                        pl.diagnostic = JSON.parse(
+                            JSON.stringify(
+                                qInfo.map((q) => {
+                                    return {qid: q.qid, answers: q.answers};
+                                })
+                            )
+                        );
                         
-            /*setQuestionInfo((qInfo) => {
-                setPayload((pl) => {
-                    pl.diagnostic = JSON.stringify(qInfo);
-                    return pl;
-                });
-
-                qInfo = qInfo.map((q) => {
-                    q.answers = q.answers.map((a) => {
-                        a.selected = false;
-                        
-                        return a;
+                        return pl;
                     });
-                    
-                    return q;
-                });
-
-                console.log(qInfo);
-
-                return qInfo;
-            });*/
-
-            setQuestionInfo((qInfo) => {
-                setPayload((pl) => {
-                    pl.diagnostic = JSON.parse(
-                        JSON.stringify(
-                            qInfo.map((q) => {
-                                return q.answers;
-                            })
-                        )
-                    );
-                    
-                    return pl;
-                });
-
-                qInfo = qInfo.map((q) => {
-                    q.answers = q.answers.map((a) => {
-                        a.selected = false;
-                        return a;
+    
+                    qInfo = qInfo.map((q) => {
+                        q.answers = q.answers.map((a) => {
+                            a.selected = false;
+                            return a;
+                        });
+    
+                        return q;
                     });
-
-                    return q;
+    
+                    return qInfo;
+                });
+            }
+            else if(sequence[state] === "Evaluation"){
+                payload.evaluation = questionInfo.map((q) => {
+                    return {qid: q.qid, answers: q.answers};
                 });
 
-                return qInfo;
-            });
+                console.log("Payload");
+                console.log(payload);
+                
+                submitEvaluation(sid, payload);
+            }
         }
-        else if(sequence[state] === "Evaluation"){
-            payload.evaluation = questionInfo;
-            
-            console.log(payload);
-        }
-
-        //Make sure to validate 
-        /*if(submitOnCompletion && data.role != "instructor" && data.role != "creator"){
-
-        }*/
-
-        console.log(questionInfo);
 
         nextSection();
     }
@@ -237,8 +201,6 @@ function Module({submitOnCompletion}){
 
         getModuleWithCode(mid, code)
         .then((res) => {
-            console.log(res);
-            
             setData(res.data);
 
             setNeedCode(false);
@@ -304,7 +266,7 @@ function Module({submitOnCompletion}){
                             {questions}
 
                             <div className={styles.buttonContainer}>
-                                <button onClick={() => {submitEvaluation()}}>Submit</button>
+                                <button onClick={() => {submit()}}>Submit</button>
                             </div>
                         </>
                     }

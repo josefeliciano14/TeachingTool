@@ -46,19 +46,13 @@ function Profile(){
             const formData = new FormData();
             
             if(imgFile){
-                console.log(imgFile);
                 formData.append('img', imgFile);
-            }
-            else{
-                console.log("No image");
             }
 
             formData.append("profile", "user");
             formData.append("first_name", firstName);
             formData.append("last_name", lastName);
             
-            console.log(formData);
-
             updateProfile(formData);
 
             setUButton("Saved");
