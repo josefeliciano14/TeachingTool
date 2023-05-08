@@ -1,0 +1,19 @@
+{
+  "name": "ouchterlony-simulation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win portable",
+    "buildmac": "electron-builder --mac portable"
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "",
+  "license": "",
+  "devDependencies": {
+    "electron": "^24.2.0",
+    "electron-builder": "^23.6.0"
+  }
+}

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+    <link href="./styles.css" rel="stylesheet">
+    <title>Ouchterlony Simulation</title>
+    <script src="gsap.min.js" charset="utf-8"></script>
+  </head>
+  <body>
+      <div id="plate">
+        <div class="container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="container">
+            <div class="circle" id="center">
+                <a class="circleText" id="centerText"></a>
+                <div class="menu" id="centerMenu">
+                    <div>None</div>
+                    <div>Ins</div>
+                    <div>HSA</div>
+                    <div>BSA</div>
+                    <div>BSA + Ins</div>
+                    <div>Anti-Ins</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                    <div>Anti-BSA + Anti-Ins</div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle1">
+                <a class="circleText" id="circle1Text"></a>
+                <div class="menu" id="circle1Menu">
+                    <div>None</div>
+                    <div>Ins</div>
+                    <div>HSA</div>
+                    <div>BSA</div>
+                    <div>BSA + Ins</div>
+                    <div>Anti-Ins</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                    <div>Anti-BSA + Anti-Ins</div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle2">
+                <a class="circleText" id="circle2Text"></a>
+                <div class="menu" id="circle2Menu">
+                    <div>None</div>
+                    <div>Ins</div>
+                    <div>HSA</div>
+                    <div>BSA</div>
+                    <div>BSA + Ins</div>
+                    <div>Anti-Ins</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                    <div>Anti-BSA + Anti-Ins</div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle3">
+                <a class="circleText" id="circle3Text"></a>
+                <div class="menu" id="circle3Menu">
+                    <div>None</div>
+                    <div>Ins</div>
+                    <div>HSA</div>
+                    <div>BSA</div>
+                    <div>BSA + Ins</div>
+                    <div>Anti-Ins</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                    <div>Anti-BSA + Anti-Ins</div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle4">
+                <a class="circleText" id="circle4Text"></a>
+                <div class="menu" id="circle4Menu">
+                    <div>None</div>
+                    <div>Ins</div>
+                    <div>HSA</div>
+                    <div>BSA</div>
+                    <div>BSA + Ins</div>
+                    <div>Anti-Ins</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                    <div>Anti-BSA + Anti-Ins</div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle5">
+                <a class="circleText" id="circle5Text"></a>
+                <div class="menu" id="circle5Menu">
+                    <div>None</div>
+                    <div>Ins</div>
+                    <div>HSA</div>
+                    <div>BSA</div>
+                    <div>BSA + Ins</div>
+                    <div>Anti-Ins</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                    <div>Anti-BSA + Anti-Ins</div>
+                </div>
+            </div>
+        </div>
+        <div class="container" id="container">
+            <div class="circle" id="circle6">
+                <a class="circleText" id="circle6Text"></a>
+                <div class="menu" id="circle6Menu">
+                    <div>None</div>
+                    <div>Ins</div>
+                    <div>HSA</div>
+                    <div>BSA</div>
+                    <div>BSA + Ins</div>
+                    <div>Anti-Ins</div>
+                    <div>Anti-BSA</div>
+                    <div>Anti-HSA</div>
+                    <div>Anti-HSA + BSA</div>
+                    <div>Anti-BSA + Anti-Ins</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="button-container">
+        <button id="results-btn">Results</button>
+    </div>
+
+    <!-- You can also require other files to run in this process -->
+    <script src="./renderer.js"></script>
+    <script src="index.js" charset="utf-8"></script>
+  </body>
+</html>
