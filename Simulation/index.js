@@ -3,6 +3,8 @@ const relativeSize = 0.2;
 const plate = document.getElementById("plate");
 const center = document.getElementById("center");
 
+let showingResults = false;
+
 const circles = [];
 for(let i=1; i<=6; i++){
     circles.push(document.getElementById("circle" + i));
@@ -32,17 +34,28 @@ for(let i=1; i<=6; i++){
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext('2d');
-canvas.height = window.innerHeight *  0.717; //relative to window screen org val 600 
-canvas.width = window.innerWidth * 0.353;
 
+function resizePlate(){
+    const parentDim = Math.min(plate.parentElement.offsetWidth, plate.parentElement.offsetHeight);
+
+    plate.style.width = parentDim * 0.6 + "px";
+    plate.style.height = parentDim * 0.6 + "px";
+
+    canvas.height = parentDim * 0.6; //relative to window screen org val 600 
+    canvas.width = parentDim * 0.6;
+
+    btnContainer.style.fontSize = (parentDim/46) + "px"
+}
 
 function resizeCircles(){
     const relativeSize = 0.2;
     center.style.width = (plate.offsetWidth * relativeSize) + "px"; 
     center.style.height = (plate.offsetHeight * relativeSize) + "px";   
+    center.style.fontSize = plate.offsetHeight*0.035 + "px";
     for(let i=0; i<circles.length; i++){
         circles[i].style.width = (plate.offsetWidth * relativeSize) + "px";
         circles[i].style.height = (plate.offsetHeight * relativeSize) + "px";
+        circles[i].style.fontSize = plate.offsetHeight*0.035 + "px";
     }
 }
 
@@ -102,48 +115,46 @@ function placeText(e){
     
 }
 
-function centerClicked(){
-    if(centerMenu.style.visibility == "hidden"){
-        centerMenu.style.visibility = "visible";
-    }
-    else{
-        centerMenu.style.visibility = "hidden";
-    }
-}
-
 function menuClicked(e){
-    const eventID = e.target.offsetParent.id;
+    const eventID = e?.target?.offsetParent?.id;
+
+    const replaceText = e.target.innerHTML === "None" ? "" : e.target.innerHTML;
+
+    if(replaceText){
+        resultBtn.style.visibility = "visible";
+    }
+
     switch (eventID) {
         case "centerMenu":
-            centerText.innerHTML = e.target.innerHTML;
+            centerText.innerHTML = replaceText;
             placeText(e);
             break;
         case "circle1Menu":
-            circle1Text.innerHTML = e.target.innerHTML;
+            circle1Text.innerHTML = replaceText;
             placeText(e);
             break;
         case "circle2Menu":
-            circle2Text.innerHTML = e.target.innerHTML;
+            circle2Text.innerHTML = replaceText;
             placeText(e);
             break;
         case "circle3Menu":
-            circle3Text.innerHTML = e.target.innerHTML;
+            circle3Text.innerHTML = replaceText;
             placeText(e);
             break;
         case "circle4Menu":
-            circle4Text.innerHTML = e.target.innerHTML;
+            circle4Text.innerHTML = replaceText;
             placeText(e);
             break;
         case "circle5Menu":
-            circle5Text.innerHTML = e.target.innerHTML;
+            circle5Text.innerHTML = replaceText;
             placeText(e);
             break;
         case "circle6Menu":
-            circle6Text.innerHTML = e.target.innerHTML;
+            circle6Text.innerHTML = replaceText;
             placeText(e);
             break;
     }
-               
+            
 }
 
 function handleResize() {
@@ -154,9 +165,16 @@ function handleResize() {
     placeText({ target: { offsetParent: { id: "circle4Menu" } } });
     placeText({ target: { offsetParent: { id: "circle5Menu" } } });
     placeText({ target: { offsetParent: { id: "circle6Menu" } } });
-
 }
 
+function centerClicked(){
+    if(centerMenu.style.visibility == "hidden"){
+        centerMenu.style.visibility = "visible";
+    }
+    else{
+        centerMenu.style.visibility = "hidden";
+    }
+}
 
 function circleClicked(i){
     switch (i){
@@ -227,9 +245,11 @@ for (let i = 1; i <= 6; i++) {
 }
 
 //Result Button 
+const btnContainer = document.getElementById("button-container");
 const resultBtn = document.getElementById("results-btn");
 resultBtn.addEventListener("click", (e) => handleResultButtonClick(e));
 
+resultBtn.style.visibility = "hidden";
 
 function handleResultButtonClick(e) { 
     const centerValue = document.getElementById('centerText').innerHTML;
@@ -240,6 +260,34 @@ function handleResultButtonClick(e) {
     const circle5Value = document.getElementById('circle5Text').innerHTML;
     const circle6Value = document.getElementById('circle6Text').innerHTML;
     const circleValues = [circle1Value,circle2Value,circle3Value,circle4Value,circle5Value,circle6Value]
+
+    if(centerValue === "" && circle1Value === "" && circle2Value === "" && circle3Value === "" && circle4Value === "" && circle5Value === "" && circle6Value === ""){
+        return;
+    }
+    
+    if(e?.target?.innerHTML === "Clear"){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        resultBtn.innerHTML = "Results";
+
+        //Resetting values
+        centerText.innerHTML = "";
+        circle1Text.innerHTML = "";
+        circle2Text.innerHTML = "";
+        circle3Text.innerHTML = "";
+        circle4Text.innerHTML = "";
+        circle5Text.innerHTML = "";
+        circle6Text.innerHTML = "";
+
+        resultBtn.style.visibility = "hidden";
+
+        return;
+    }
+
+    gsap.from("#canvas", {
+        opacity: 0, duration: 2
+    });
+
+    resultBtn.innerHTML = "Clear";
     
     for(let i = 0; i < 6; i++) {
         if(circleValues[i] == ''){
@@ -305,11 +353,11 @@ function drawCurves(circle){
         ctx.beginPath(); // start a new path
         ctx.moveTo(centerX+ x1, centerY - y1);
         ctx.quadraticCurveTo(centerX + x2, centerY -y2, centerX+ x3, centerY - y3); // adjust control point
-        ctx.strokeStyle = 'blue';
+        ctx.strokeStyle = 'black';
         ctx.lineWidth = 3;
         ctx.stroke(); // stroke the path
     }
- 
+
 }
 
 function drawLines(circle){
@@ -333,11 +381,11 @@ function drawLines(circle){
         ctx.beginPath();
         ctx.moveTo(centerX + x3, centerY - y3); //circle 1 val 0
         ctx.lineTo(centerX + x1, centerY - y1); //circle 2 val 1
-        ctx.strokeStyle = 'blue';
+        ctx.strokeStyle = 'black';
         ctx.lineWidth = 3;
         ctx.stroke();
     }
- 
+
 }
 
 function drawLongerLinesLeft(circle){
@@ -368,11 +416,11 @@ function drawLongerLinesLeft(circle){
         ctx.moveTo(centerX + x1, centerY - y1); //circle 1 val 0
         ctx.lineTo(centerX + x2, centerY - y2); //circle 2 val 1
         ctx.lineTo(centerX + x3, centerY - y3); //circle 2 val 1
-        ctx.strokeStyle = 'blue';
+        ctx.strokeStyle = 'black';
         ctx.lineWidth = 3;
         ctx.stroke();
     }
- 
+
 }
 
 function drawLongerLinesRight(circle){
@@ -403,11 +451,11 @@ function drawLongerLinesRight(circle){
         ctx.moveTo(centerX + x2, centerY - y2); //circle 1 val 0
         ctx.lineTo(centerX + x1, centerY - y1); //circle 2 val 1
         ctx.lineTo(centerX + x3, centerY - y3); //circle 2 val 1
-        ctx.strokeStyle = 'blue';
+        ctx.strokeStyle = 'black';
         ctx.lineWidth = 3;
         ctx.stroke();
     }
- 
+
 }
 
 function centerBSA(a,b,c,d,e,f,g){
@@ -964,12 +1012,14 @@ function resizeMenus(){
     }
 }
 
+resizePlate();
 resizeCircles();
 placeCircles();
 
 window.addEventListener('resize', menuClicked);
 
 window.addEventListener('resize', function() {
+    resizePlate();
     resizeCircles();
     placeCircles();
     handleResize();
@@ -979,4 +1029,3 @@ window.addEventListener('resize', function() {
 
 // drawLongerLinesLeft(0);
 // drawLongerLinesRight(1);
-
