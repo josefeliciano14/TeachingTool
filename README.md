@@ -1,1 +1,1 @@
-# TeachingTool
+# LearnMode
