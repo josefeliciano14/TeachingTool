@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../Components/Navbar";
 import styles from '../Styles/Section.module.scss';
 import { getSection, removeStudent } from "../api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { PieChart, Pie, Cell, Bar, BarChart, XAxis, YAxis, Tooltip, Legend, CartesianGrid } from 'recharts';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,8 +12,9 @@ function Section(){
     
     const {sid} = useParams();
 
-    const [code, setCode] = useState("");
+    const [section, setSection] = useState(null);
     const [students, setStudents] = useState([]);
+    const [notCompleted, setNotCompleted] = useState([]);
     const [statistics, setStatistics] = useState({avg: "", stddev: "", min: "", max: ""});
     const [pieValues, setPieValues] = useState([]);
     const [barValues, setBarValues] = useState([]);
@@ -21,25 +22,30 @@ function Section(){
     
     const COLORS = ['#337137', '#1DC09A'];
 
+    const nav = useNavigate();
+
     useEffect(() => {
         getSection(sid)
             .then((res) => {
-                setCode(res?.data?.code);
+                console.log(res.data);
+                
+                setSection(res?.data?.section);
                 
                 setStudents(res.data.students);
+                setNotCompleted(res.data.not_completed);
                 if(res.data.statistics){
 
-                    setStatistics(res.data.statistics[0]);
+                    setStatistics(res.data.statistics);
 
                     setPieValues(
                         [
                             {   
                                 name: "Completed",
-                                value: res.data.statistics[0].completed
+                                value: res.data.statistics.completed
                             }, 
                             {   
                                 name: "Not Completed",
-                                value: res.data.students.length-res.data.statistics[0].completed
+                                value: res.data.not_completed.length
                             }, 
                         ]
                     );
@@ -71,6 +77,9 @@ function Section(){
                 }
 
                 console.log(res.data);
+            })
+            .catch((err) => {
+                nav("/");
             });
     }, []);
 
@@ -84,21 +93,28 @@ function Section(){
         <main>
             <Navbar/>
 
+            {section?.code 
+                ? 
+                    <>
+                        <h1 className={styles.title}>{`${section.module_name} - Section: ${section.section_name}`}</h1>
+
+                        {section.code && 
+                            <div className={styles.linkContainer} onClick={() => {setLinkClicked(true); navigator.clipboard.writeText(`${window.location.host}/enroll/${sid}/${section.code}`)}}>
+                                <span className={styles.linkText}>Enrollment Link: </span>
+                                <div className={styles.link}>
+                                    <span>{`${window.location.host}/enroll/${sid}/${section.code}`}</span>
+                                </div>
+                                <FontAwesomeIcon icon={linkClicked ? faCheck : faClipboard}/>
+                            </div>
+                        }
+                    </>
+                :
+                    <h1>Loading...</h1>
+            }
+
             {students.length > 0 ? 
             
                 <>
-                    <h1 className={styles.title}>{`${students[0].module_name} - Section: ${students[0].section_name}`}</h1>
-
-                    {code && 
-                        <div className={styles.linkContainer} onClick={() => {setLinkClicked(true); navigator.clipboard.writeText(`${window.location.host}/enroll/${sid}/${code}`)}}>
-                            <span className={styles.linkText}>Enrollment Link: </span>
-                            <div className={styles.link}>
-                                <span>{`${window.location.host}/enroll/${sid}/${code}`}</span>
-                            </div>
-                            <FontAwesomeIcon icon={linkClicked ? faCheck : faClipboard}/>
-                        </div>
-                    }
-
                     <div className={styles.charts}>
                         <div className={styles.chartContainer}>
                             <span className={styles.chartTitle}>Completion</span>
@@ -144,27 +160,27 @@ function Section(){
                             <div className={styles.statRow}>
                                 <div className={styles.stat}>
                                     <span className={styles.label}>Average</span>
-                                    <span className={styles.value}>{statistics.avg != null ? statistics.avg : "N/A"}</span>
+                                    <span className={styles.value}>{statistics.avg != null ? Math.floor(statistics.avg*100)/100 : "N/A"}</span>
                                 </div>
                                 <div className={styles.stat}>
                                     <span className={styles.label}>Std Dev</span>
-                                    <span className={styles.value}>{statistics.stddev != null ? statistics.stddev : "N/A"}</span>
+                                    <span className={styles.value}>{statistics.stddev != null ? Math.floor(statistics.stddev*100)/100 : "N/A"}</span>
                                 </div>
                             </div>
                             <div className={styles.statRow}>
                                 <div className={styles.stat}>
                                     <span className={styles.label}>Maximum</span>
-                                    <span className={styles.value}>{statistics.max != null ? statistics.max : "N/A"}</span>
+                                    <span className={styles.value}>{statistics.max != null ? Math.floor(statistics.max*100)/100 : "N/A"}</span>
                                 </div>
                                 <div className={styles.stat}>
                                     <span className={styles.label}>Minimum</span>
-                                    <span className={styles.value}>{statistics.min != null ? statistics.min : "N/A"}</span>
+                                    <span className={styles.value}>{statistics.min != null ? Math.floor(statistics.min*100)/100 : "N/A"}</span>
                                 </div>
                             </div>
                             <div className={styles.statRow}>
                                 <div className={styles.longStat}>
                                     <span className={styles.label}>Average Diagnostic Improvement</span>
-                                    <span className={styles.value}>{students[0]?.average_improvement != null ? `${students[0].average_improvement}%` : "N/A"}</span>
+                                    <span className={styles.value}>{statistics.average_improvement != null ? `${Math.floor(statistics.average_improvement*100)/100}%` : "N/A"}</span>
                                 </div>
                             </div>
                         </div>
@@ -195,13 +211,27 @@ function Section(){
                                         )
                                     }
                                 })}
+
+                                {notCompleted.map((student, index) => {
+                                    if(student.uid){
+                                        return(
+                                            <tr key={index}>
+                                                <td>{`${student.first_name} ${student.last_name}`}</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                                <td className={styles.remove} onClick={() => remove(student.uid, sid)}><FontAwesomeIcon icon={faX}/></td>
+                                            </tr>
+                                        )
+                                    }
+                                })}
                             </tbody>
                         </table>
                     </div>
                 </>
-
-            :
-                <h1>Loading...</h1>
+            
+                :
+                    <h3 className={styles.message}>There are currently no students in this section</h3>
             }
         </main>
     )

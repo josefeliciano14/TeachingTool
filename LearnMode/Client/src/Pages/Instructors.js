@@ -48,9 +48,13 @@ function Instructors(){
         <main>
             <Navbar/>
 
-            <h1>Instructors</h1>
+            <h1 className={styles.title}>Instructors</h1>
 
             <button className={styles.button} onClick={() => {nav("/add-instructor")}}>+ Add Instructor</button>
+
+            {sections?.length === 0 &&
+                <h4 className={styles.message}>You currently do not have any instructors</h4>
+            }
 
             {sections.map((section, index) => {
                 return(

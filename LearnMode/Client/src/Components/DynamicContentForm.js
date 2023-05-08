@@ -12,7 +12,7 @@ function DynamicContentForm({index, setContentInfo, isProfessor, content}){
 
     const imgRef = useRef();
     
-    const typeOptions = isProfessor ? ["Text", "Image", "Dynamic Image", "Webpage", "Custom"] : ["Text", "Image", "Dynamic Image"];
+    const typeOptions = isProfessor ? ["Text", "Image", "Dynamic Image", "Custom"] : ["Text", "Image", "Dynamic Image"];
 
     useEffect(() => {
         if(content){

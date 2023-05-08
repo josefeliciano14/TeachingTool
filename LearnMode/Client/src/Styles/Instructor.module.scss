@@ -6,16 +6,73 @@
     color: white;
 }
 
+.title{
+    color: black;
+    margin: 20px 0px;
+}
+
 .container{
     margin-top: 20px;
     overflow: hidden;
     min-width: 600px;
     max-width: 90%;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-bottom: 40px;
+    color: black;
+    height: 290px;
+
+    .instructor{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--main-color);
+        padding: 30px;
+        border-radius: 6px;
+        border: 1px solid var(--main-color);
+        margin-right: 40px;
+        color: white;
+        height: 100%;
+
+        .imgContainer{
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 1px solid black;
+            margin-bottom: 15px;
+            overflow: hidden;
+
+            img{
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+        }
+
+        .name{
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .university{
+            font-size: 18px;
+        }
+    }
+
+    .sections{
+        width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--main-color);
+        height: 100%;
+    }
 
     .row{
         display: flex;

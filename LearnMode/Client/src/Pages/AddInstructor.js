@@ -21,14 +21,16 @@ function AddInstructor(){
     useEffect(() => {
         getSections()
             .then((res) => {
-                setSections(res.data);
+
+                console.log(res.data.created);
+                setSections(res.data.created);
                 setLoaded(true);
 
-                if(res.data.length > 0){
+                if(res.data.created.length > 0){
                     let list = [];
                     let mids = [];
                     
-                    res.data.map((s) => {
+                    res.data.created.map((s) => {
                         if(!mids.includes(s.mid)){
                             list.push({mid: s.mid, name: s.module_name});
                             mids.push(s.mid);
@@ -37,7 +39,7 @@ function AddInstructor(){
 
                     setModules(list);
                     
-                    setModule(res.data[0].mid);
+                    setModule(res.data.created[0].mid);
                 }
             })
     }, []);

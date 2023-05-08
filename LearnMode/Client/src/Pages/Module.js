@@ -20,6 +20,7 @@ function Module({submitOnCompletion}){
     const [incorrectCode, setIncorrectCode] = useState(false);
     const [code, setCode] = useState("");
     const [dots, setDots] = useState([]);
+    const [scores, setScores] = useState({});
 
     const [payload, setPayload] = useState({});
 
@@ -31,6 +32,8 @@ function Module({submitOnCompletion}){
         
         getModule(mid, sid)
             .then((res) => {
+                console.log(res.data);
+                
                 setData(res.data);
             })
             .catch((err) => {
@@ -135,7 +138,7 @@ function Module({submitOnCompletion}){
         if(state < sequence.length){
             setState((prev) => {
                 console.log(`Setting state to ${prev+1}`);
-                console.log("Which means that we are currently in " + sequence[state+1]);
+                console.log("sequence state = " + sequence[state+1]);
                 
                 return prev+1;
             });
@@ -189,7 +192,12 @@ function Module({submitOnCompletion}){
                 console.log("Payload");
                 console.log(payload);
                 
-                submitEvaluation(sid, payload);
+                submitEvaluation(sid, payload)
+                .then((res) => {
+                    if(res?.data?.evaluation_score){
+                        setScores(res.data);
+                    }
+                });
             }
         }
 
@@ -274,9 +282,16 @@ function Module({submitOnCompletion}){
                     {sequence[state] === "Content" &&
                         <>
                             {data.content[cIndex].type === "Custom" &&
-                                <div className={styles.contentContainer}>
-                                    <iframe src={`${BASE_URL}/content/${data.content[cIndex].cid}.html`}/>
-                                </div>
+                                <>
+                                    <div className={styles.window}>
+                                        <div className={styles.header}>
+                                            {data.content[cIndex].name}
+                                        </div>
+                                        <div className={styles.contentContainer}>
+                                            <iframe src={`${BASE_URL}/content/${data.content[cIndex].cid}.html`}/>
+                                        </div>
+                                    </div>
+                                </>
                             }
 
                             {data.content[cIndex].type === "Text" &&
@@ -299,17 +314,24 @@ function Module({submitOnCompletion}){
                                         <div className={styles.imgContainer}>
                                             <img className={styles.img} src={`${BASE_URL}/content/${data.content[cIndex].cid}.${data.content[cIndex].data.image}`}/>
                                         </div>
-                                        <p>{data.content[cIndex].data.text}</p>
+                                        <p className={styles.imageText}>{data.content[cIndex].data.text}</p>
                                     </div>
                                 </div>
                             }
 
                             {data.content[cIndex].type === "Dynamic Image" &&
-                                <div className={styles.dynamicImage}>
-                                    <div className={styles.dotsContainer}>
-                                        {dots}
+                                <div className={styles.window}>
+                                    <div className={styles.header}>
+                                        {data.content[cIndex].name}
                                     </div>
-                                    <img ref={ref} src={`${BASE_URL}/content/${data.content[cIndex].cid}.${data.content[cIndex].data.image}`} onLoad={loadedImage}/>
+                                    <div className={styles.content}>
+                                        <div className={styles.dynamicImage}>
+                                            <div className={styles.dotsContainer}>
+                                                {dots}
+                                            </div>
+                                            <img ref={ref} src={`${BASE_URL}/content/${data.content[cIndex].cid}.${data.content[cIndex].data.image}`} onLoad={loadedImage}/>
+                                        </div>
+                                    </div>
                                 </div>
                             }
 
@@ -326,6 +348,13 @@ function Module({submitOnCompletion}){
                                     End of Module
                                 </div>
                                 <div className={styles.content}>
+                                    {scores?.evaluation_score &&
+                                        <div className={styles.scores}>
+                                            <span>Diagnostic: {scores?.diagnostic_score}%</span>
+                                            <span>Grade: {scores?.evaluation_score}%</span>
+                                        </div>
+                                    }
+                                    
                                     <div className={styles.buttonContainer}>
                                         <button onClick={() => nav("/")}>Exit</button>
                                     </div>

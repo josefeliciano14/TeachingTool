@@ -93,6 +93,26 @@ export const getSection = async (req, res) => {
         }
 
         const {sid} = req.params;
+
+        await new Promise((resolve, reject) => {
+            let sql = "SELECT creator FROM Sections LEFT JOIN Modules M on M.mid = Sections.module WHERE sid=?;";
+            db.query(sql, [sid], (error, result) => {
+                if(error){
+                    throw error;
+                }
+
+                if(result?.length > 0){
+                    if(user_id != result[0].creator){
+                        return res.status(403).send("You do not have access to this resource");    
+                    }
+                }
+                else{
+                    return res.status(404).send("Section not found");
+                }
+    
+                resolve();
+            });
+        }); 
         
         let sql = "SELECT eid FROM Evaluations LEFT JOIN Modules M on Evaluations.module = M.mid LEFT JOIN Sections S on M.mid = S.module WHERE sid=?;"
         db.query(sql, [sid], async (error, result) => {
@@ -108,8 +128,8 @@ export const getSection = async (req, res) => {
                 let payload = {
                     students: [],
                     diagnostic_statistics: [],
-                    statistics: [],
-                    code: ""
+                    statistics: {},
+                    section: {},
                 }
                 
                 /*await new Promise((resolve, reject) => {
@@ -132,14 +152,35 @@ export const getSection = async (req, res) => {
                             throw error;
                         }
 
-                        payload.statistics = result;
+                        if(result?.length > 0){
+                            payload.statistics.avg = result[0].avg;
+                            payload.statistics.stddev = result[0].stddev;
+                            payload.statistics.completed = result[0].completed;
+                            payload.statistics.min = result[0].min;
+                            payload.statistics.max = result[0].max;
+                        }
             
                         resolve();
                     });
                 });
 
                 await new Promise((resolve, reject) => {
-                    let sql = "WITH diagnostic_scores as (SELECT Users.uid, score FROM Sections LEFT JOIN Modules on Modules.mid = Sections.module LEFT JOIN Enrollments on Sections.sid = Enrollments.sid LEFT JOIN Users on Users.uid = Enrollments.uid LEFT JOIN Scores on Users.uid = Scores.uid WHERE Sections.sid=? AND (evaluation=? OR evaluation IS NULL) AND is_diagnostic=true), evaluation_scores as (SELECT Sections.sid as sid, Sections.name as section_name, Modules.name as module_name, Users.uid, Users.first_name, Users.last_name, score, date_taken, evaluation FROM Sections LEFT JOIN Modules on Modules.mid = Sections.module LEFT JOIN Enrollments on Sections.sid = Enrollments.sid LEFT JOIN Users on Users.uid = Enrollments.uid LEFT JOIN Scores on Users.uid = Scores.uid WHERE Sections.sid=? AND (evaluation=? OR evaluation IS NULL) AND is_diagnostic=false) SELECT sid, section_name as section_name, module_name as module_name, evaluation_scores.uid, first_name, last_name, diagnostic_scores.score as diagnostic_score, evaluation_scores.score as evaluation_score, date_taken, evaluation, avg(evaluation_scores.score-diagnostic_scores.score) as average_improvement FROM evaluation_scores LEFT JOIN diagnostic_scores ON diagnostic_scores.uid=evaluation_scores.uid ORDER BY last_name, first_name, evaluation_scores.uid ASC;";
+                    let sql = "WITH diagnostic_scores as (SELECT Users.uid, score FROM Sections LEFT JOIN Modules on Modules.mid = Sections.module LEFT JOIN Enrollments on Sections.sid = Enrollments.sid LEFT JOIN Users on Users.uid = Enrollments.uid LEFT JOIN Scores on Users.uid = Scores.uid WHERE Sections.sid=? AND (evaluation=? OR evaluation IS NULL) AND is_diagnostic=true), evaluation_scores as (SELECT Sections.sid as sid, Sections.name as section_name, Modules.name as module_name, Users.uid, Users.first_name, Users.last_name, score, date_taken, evaluation FROM Sections LEFT JOIN Modules on Modules.mid = Sections.module LEFT JOIN Enrollments on Sections.sid = Enrollments.sid LEFT JOIN Users on Users.uid = Enrollments.uid LEFT JOIN Scores on Users.uid = Scores.uid WHERE Sections.sid=? AND (evaluation=? OR evaluation IS NULL) AND is_diagnostic=false) SELECT avg(evaluation_scores.score-diagnostic_scores.score) as average_improvement FROM evaluation_scores LEFT JOIN diagnostic_scores ON diagnostic_scores.uid=evaluation_scores.uid ORDER BY last_name, first_name, evaluation_scores.uid ASC;";
+                    db.query(sql, [sid, eid, sid, eid], (error, result) => {
+                        if(error){
+                            throw error;
+                        }
+
+                        if(result?.length > 0){
+                            payload.statistics.average_improvement = result[0].average_improvement;
+                        }
+            
+                        resolve();
+                    });
+                });
+
+                await new Promise((resolve, reject) => {
+                    let sql = "WITH diagnostic_scores as (SELECT Users.uid, score FROM Sections LEFT JOIN Modules on Modules.mid = Sections.module LEFT JOIN Enrollments on Sections.sid = Enrollments.sid LEFT JOIN Users on Users.uid = Enrollments.uid LEFT JOIN Scores on Users.uid = Scores.uid WHERE Sections.sid=? AND (evaluation=? OR evaluation IS NULL) AND is_diagnostic=true), evaluation_scores as (SELECT Sections.sid as sid, Sections.name as section_name, Modules.name as module_name, Users.uid, Users.first_name, Users.last_name, score, date_taken, evaluation FROM Sections LEFT JOIN Modules on Modules.mid = Sections.module LEFT JOIN Enrollments on Sections.sid = Enrollments.sid LEFT JOIN Users on Users.uid = Enrollments.uid LEFT JOIN Scores on Users.uid = Scores.uid WHERE Sections.sid=? AND (evaluation=? OR evaluation IS NULL) AND is_diagnostic=false) SELECT sid, section_name as section_name, module_name as module_name, evaluation_scores.uid, first_name, last_name, diagnostic_scores.score as diagnostic_score, evaluation_scores.score as evaluation_score, date_taken, evaluation FROM evaluation_scores LEFT JOIN diagnostic_scores ON diagnostic_scores.uid=evaluation_scores.uid ORDER BY last_name, first_name, evaluation_scores.uid ASC;";
                     db.query(sql, [sid, eid, sid, eid], (error, result) => {
                         if(error){
                             throw error;
@@ -152,14 +193,27 @@ export const getSection = async (req, res) => {
                 });
 
                 await new Promise((resolve, reject) => {
-                    let sql = "SELECT code FROM Sections WHERE sid=?;";
+                    let sql = "SELECT U.uid, first_name, last_name, sid FROM Enrollments LEFT JOIN Scores S on Enrollments.uid = S.uid LEFT JOIN Users U on U.uid = Enrollments.uid where sid=? AND score IS null;";
+                    db.query(sql, [sid], (error, result) => {
+                        if(error){
+                            throw error;
+                        }
+
+                        payload.not_completed = result;
+            
+                        resolve();
+                    });
+                });
+
+                await new Promise((resolve, reject) => {
+                    let sql = "SELECT Sections.name as section_name, Sections.code as code, M.name as module_name FROM Sections LEFT JOIN Modules M on M.mid = Sections.module WHERE sid=?;";
                     db.query(sql, [sid], (error, result) => {
                         if(error){
                             throw error;
                         }
 
                         if(result?.length > 0){
-                            payload.code = result[0].code;
+                            payload.section = result[0];
                         }
             
                         resolve();
@@ -464,12 +518,14 @@ export const submitEvaluation = async (req, res) => {
 
         //Save Score(s)
 
+        let diagnostic_score;
+        let evaluation_score;
         if(evaluation?.diagnostic?.length > 0){
-            let score = calculateScore(questions, evaluation.diagnostic);
+            diagnostic_score = calculateScore(questions, evaluation.diagnostic);
 
             await new Promise((resolve, reject) => {
                 let sql = "INSERT INTO Scores(uid, evaluation, score, max_score, is_diagnostic) VALUES(?, ?, ?, ?, ?);";
-                db.query(sql, [user_id, answers[0].eid, score, 100, true], (error, result) => {
+                db.query(sql, [user_id, answers[0].eid, diagnostic_score, 100, true], (error, result) => {
                     if(error){
                         throw error;
                     }
@@ -480,11 +536,11 @@ export const submitEvaluation = async (req, res) => {
         }
 
         if(evaluation?.evaluation?.length > 0){
-            let score = calculateScore(questions, evaluation.evaluation);
+            evaluation_score = calculateScore(questions, evaluation.evaluation);
 
             await new Promise((resolve, reject) => {
                 let sql = "INSERT INTO Scores(uid, evaluation, score, max_score, is_diagnostic) VALUES(?, ?, ?, ?, ?);";
-                db.query(sql, [user_id, answers[0].eid, score, 100, false], (error, result) => {
+                db.query(sql, [user_id, answers[0].eid, evaluation_score, 100, false], (error, result) => {
                     if(error){
                         throw error;
                     }
@@ -497,7 +553,7 @@ export const submitEvaluation = async (req, res) => {
             return res.status(400).json({message: "no answers provided"});
         }
 
-        return res.status(200).json({message: "OK"});
+        return res.status(200).json({diagnostic_score: diagnostic_score, evaluation_score: evaluation_score});
 
     }
     catch(error){

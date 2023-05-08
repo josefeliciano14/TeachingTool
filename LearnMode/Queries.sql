@@ -23,3 +23,7 @@ CREATE TABLE Questions(qid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, evaluation I
 CREATE TABLE Options(oid INT PRIMARY KEY AUTO_INCREMENT NOT NULL, question INT NOT NULL, FOREIGN KEY (question) REFERENCES Questions(qid), answer TEXT NOT NULL, is_correct boolean NOT null, ind INT);
 
 CREATE TABLE Scores(uid INT NOT NULL, FOREIGN KEY (uid) REFERENCES Users(uid), evaluation INT NOT NULL, FOREIGN KEY (evaluation) REFERENCES Evaluations(eid), score INT NOT NULL, max_score INT NOT NULL, is_diagnostic boolean NOT NULL, date_taken datetime default now(), PRIMARY KEY(uid, evaluation, is_diagnostic));
+
+INSERT INTO professors(uid, university, department) VALUES(13, 'UPRM', 'Biology')
+
+UPDATE Scores SET score=33 WHERE uid=9 AND is_diagnostic=false

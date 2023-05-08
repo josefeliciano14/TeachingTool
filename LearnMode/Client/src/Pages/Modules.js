@@ -173,6 +173,11 @@ function Modules(){
 
                         {showing === "created" && created}
                         {showing === "enrolled" && enrolled}
+
+                        {(showing === "enrolled" && enrolled?.length === 0) &&
+                            <h4>You are not currently enrolled in any section</h4>
+                        }
+
                         {showing === "instructing" && instructing}
                         {showing === "searched" && 
                             <>
@@ -181,7 +186,7 @@ function Modules(){
                                     searched
                                 :
                                     <span className={styles.resultMessage}>
-                                        {searchedOnce ? "No Results" : "Search Something!"}
+                                        {searchedOnce ? "No Results" : "Search For A Module!"}
                                     </span>
                                 }
                             </>

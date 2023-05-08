@@ -34,7 +34,7 @@ export const getInstructor = async (req, res) => {
             return res.status(401).send("Unauthenticated");
         }
         
-        let sql = "SELECT Instructs.iid, Instructs.sid, first_name, last_name, permission_viewGrades, permission_removeStudents, permission_editModule, university, department, S.name as section_name, m.name as module_name FROM Instructs LEFT JOIN Instructors I on Instructs.iid = I.iid LEFT JOIN Users U on U.uid = I.uid LEFT JOIN Sections S on S.sid = Instructs.sid LEFT JOIN Modules M on M.mid = S.module WHERE Instructs.iid=? AND Instructs.sid=?;";
+        let sql = "SELECT Instructs.iid, Instructs.sid, first_name, last_name, permission_viewGrades, permission_removeStudents, permission_editModule, university, department, S.name as section_name, m.name as module_name, U.uid, image FROM Instructs LEFT JOIN Instructors I on Instructs.iid = I.iid LEFT JOIN Users U on U.uid = I.uid LEFT JOIN Sections S on S.sid = Instructs.sid LEFT JOIN Modules M on M.mid = S.module WHERE Instructs.iid=? AND Instructs.sid=?;";
         db.query(sql, [iid, sid], (error, result) => {
             if(error){
                 throw error;

@@ -112,6 +112,18 @@ function Sections(){
                 </div>
             }
 
+            {modules[showing]?.length === 0 &&
+                <>
+                    {showing === "enrolled" &&
+                        <h4 className={styles.message}>You are currently not enrolled in any sections</h4>    
+                    }
+
+                    {showing === "created" &&
+                        <h4 className={styles.message}>You have not yet created any sections</h4>    
+                    }
+                </>
+            }
+
             {modules[showing]?.length > 0 && modules[showing].map((module, index) => {
                 return(
                     <div key={index} className={styles.window}>

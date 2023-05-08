@@ -68,12 +68,6 @@ function Navbar(){
                         <span>Sections</span>
                     </div>
                     </Link>
-                    <Link to="/">
-                    <div className={styles.navMenuItem}>
-                        <FontAwesomeIcon icon={faGear}/>
-                        <span>Settings</span>
-                    </div>
-                    </Link>
                 </div>
             </div>
             <FontAwesomeIcon className={styles.menuIcon} icon={faBars} onClick={openNavMenu}/>

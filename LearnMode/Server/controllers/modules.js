@@ -630,6 +630,8 @@ export const createModule = async (req, res) => {
         
         const module = JSON.parse(req.body.data);
 
+        console.log(module);
+
         const user_id = req.uid;
         
         //Check if user is authenticated
@@ -716,10 +718,10 @@ export const createModule = async (req, res) => {
                         }
                         
                         //File format not supported 
-                        if(getFileExtension(req.files[`c${cIndex}`].name) != "html"){
+                        /*if(getFileExtension(req.files[`c${cIndex}`].name) != "html"){
                             console.log("No html file provided");
                             return;
-                        }
+                        }*/
                     }
                     else if(c.type === "Image" || c.type === "Dynamic Image"){
                         //No image file was provided
@@ -730,10 +732,10 @@ export const createModule = async (req, res) => {
                         }
 
                         //Image format not supported 
-                        if(!supportedImgFormats.includes(getFileExtension(req.files[`c${cIndex}`].name).toLowerCase())){
+                        /*if(!supportedImgFormats.includes(getFileExtension(req.files[`c${cIndex}`].name).toLowerCase())){
                             console.log("Image format not supported");
                             return;
-                        }
+                        }*/
                     }
 
                     if(c?.file){
